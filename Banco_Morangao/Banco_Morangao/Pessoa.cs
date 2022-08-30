@@ -12,7 +12,7 @@ namespace Banco_Morangao
         private String Telefone { get; set; }
 
         private Endereco endereco;
-        private String Email { get; set; }
+        private String Email { get; set; } 
         private String Cpf { get; set; }
         private String Genero { get; set; }
 

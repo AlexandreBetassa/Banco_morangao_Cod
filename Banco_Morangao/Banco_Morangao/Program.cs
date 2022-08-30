@@ -13,9 +13,6 @@ namespace Banco_Morangao
             Console.Clear();
             Console.WriteLine("Dados da pessoa: ");
             Console.WriteLine(pessoa);
-
-
-
         }
 
         //metodo para coletar endereco
