@@ -44,7 +44,7 @@ namespace Banco_Morangao
         //metodo override toString para escrita dos dados
         public override string ToString()
         {
-            return $"Endereço: {Logradouro}, n°: {Numero}, Bairro: {Bairro}, Cidade: {Cidade}, CEP: {Cep}, Complemento: {Complemento}".ToString();
+            return $"{Logradouro}, n°: {Numero}, Bairro: {Bairro}, Cidade: {Cidade}, CEP: {Cep}, Complemento: {Complemento}".ToString();
         }
 
 
