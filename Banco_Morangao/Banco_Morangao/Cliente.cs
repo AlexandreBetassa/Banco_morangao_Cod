@@ -13,7 +13,7 @@ namespace Banco_Morangao
         private string _habilitado;
         private Pessoa _pessoa;
         private bool _estudante;
-        private string _renda;
+        protected string _renda;
         //private Conta conta;
 
         public Cliente() { }

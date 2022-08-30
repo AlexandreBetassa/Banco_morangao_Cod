@@ -73,8 +73,8 @@ namespace Banco_Morangao
         {
             Pessoa pessoa;
             String cargo, nivelAcesso;
-            pessoa = coletarPessoa();
 
+            pessoa = coletarPessoa();
             Console.WriteLine("Informe o cargo do funcionário: ");
             cargo = Console.ReadLine();
 

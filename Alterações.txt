@@ -2,3 +2,12 @@ alterado atributo Agencia para Ag => conflito com o nome da classe
 
 Adicionado Construtor endereco com parametros
 Adicionado Contrutor Pessoa com parametros
+
+
+
+referencias
+
+
+https://pt.linkedin.com/pulse/algoritmo-de-luhn-valida%C3%A7%C3%A3o-n%C3%BAmero-cart%C3%A3o-cr%C3%A9dito-pdi-hudson-martins-
+https://www.4devs.com.br/gerador_de_numero_cartao_credito
+https://gizmodo.uol.com.br/como-sao-criados-os-numeros-de-cartao-de-credito/
