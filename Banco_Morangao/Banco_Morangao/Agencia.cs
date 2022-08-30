@@ -11,5 +11,10 @@ namespace Banco_Morangao
         private String NumAgencia { get; set; }
         //adicionar a lista de clientes após criar a classe clientes
         //adicionar a lista de funcionarios após criar a classe funcionários
+
+        public Agencia()
+        {
+
+        }
     }
 }
