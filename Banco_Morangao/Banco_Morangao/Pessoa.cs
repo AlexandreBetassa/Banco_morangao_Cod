@@ -30,5 +30,11 @@ namespace Banco_Morangao
             Genero = genero;
         }
 
+        //metodo override
+        public override string ToString()
+        {
+            return $"Nome: {Nome}\nTelefone: {Telefone}\nEndereço: {endereco}\nE-mail: {Email}\nCPF: {Cpf}\nGênero: {Genero}".ToString();
+        }
+
     }
 }
