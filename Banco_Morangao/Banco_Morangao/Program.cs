@@ -15,6 +15,7 @@ namespace Banco_Morangao
             Console.WriteLine(pessoa);
         }
 
+
         //metodo para coletar endereco
         static Endereco coletarEndereco()
         {
