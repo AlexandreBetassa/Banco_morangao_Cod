@@ -6,11 +6,11 @@ namespace Banco_Morangao
     {
         static void Main(string[] args)
         {
-            Cliente cliente = cadastrarCliente();
+            ContaCorrente cc = criarContaCorrente();
             Console.Clear();
             Console.WriteLine("CADASTRO DE CLIENTE");
             Console.WriteLine("DADOS DO CLIENTE CADASTRADO COM SUCESSO\n\n\n ");
-            Console.WriteLine(cliente);
+            Console.WriteLine(cc);
         }
 
 
@@ -19,12 +19,16 @@ namespace Banco_Morangao
         {
             string logradouro, bairro, cidade, cep, complemento;
             int numero;
+            bool checkNum;
 
             Console.WriteLine("Informe o nome o logradouro com rua ou avenida: ");
             logradouro = Console.ReadLine();
 
             Console.WriteLine("Informe o numero: ");
-            numero = int.Parse(Console.ReadLine());
+            do
+            {
+                checkNum = int.TryParse(Console.ReadLine(), out numero);
+            } while (checkNum == false);
 
             Console.WriteLine("Informe o bairro: ");
             bairro = Console.ReadLine();
@@ -104,6 +108,31 @@ namespace Banco_Morangao
             } while (checkRenda == false);
 
             return new Cliente("Sim", pessoa, true, renda.ToString());
+        }
+
+        //criar conta corrente
+        static ContaCorrente criarContaCorrente()
+        {
+            Cliente cliente;
+            String agencia, tipoConta;
+            float saldoInicial, renda;
+            String dataVencimento;
+
+            Console.WriteLine("INFORME OS DADOS DA CONTA");
+            Console.WriteLine("Informe o numero da agencia: ");
+            agencia = Console.ReadLine();
+            Console.WriteLine("Informe o tipo de conta: ");
+            tipoConta = Console.ReadLine();
+            Console.WriteLine("Terá deposito inicial? ");
+            saldoInicial = float.Parse(Console.ReadLine());
+            Console.WriteLine("Informe a renda: ");
+            renda = float.Parse(Console.ReadLine());
+            Console.Clear();
+            Console.WriteLine("INFORME OS DADOS DO CLIENTE");
+            cliente = cadastrarCliente();
+
+            return new ContaCorrente(cliente, agencia, saldoInicial, tipoConta, renda);
+
         }
 
     }

@@ -14,25 +14,28 @@ namespace Banco_Morangao
         private float _saldo;
         private String _numCartao;
         private String _digVerificador;
-        private DateTime _dataVencFatura;
+        private String _dataVencFatura;
         private DateTime _validadeCartao;
 
         Random r = new Random();
 
         //criar a senha após estiver funcionando "a fazer"
-        protected Cartao(float limite, DateTime datVencFatura)
+        public Cartao(float limite, String datVencFatura)
         {
             _habilitarCartao = false;
             //_senha = senha;
             _limite = limite;
             _saldo = limite;
-            _numCartao = r.Next(1111111111, 999999999).ToString();
+            _numCartao = r.Next(10000, 99999).ToString();
             //_digVerificador = "criar metodo";
             _dataVencFatura = datVencFatura;
             _validadeCartao = DateTime.Now; //somar mais 5 anos "a fazer"
         }
 
-
+        public override string ToString()
+        {
+            return $"Numero do Cartão: {_numCartao}\nDigito verificador: {_digVerificador}\nData vencimento fatura: {_dataVencFatura}\nData de vencimento do cartão: {_validadeCartao.ToShortDateString()}Saldo: {_saldo}".ToString();
+        }
 
     }
 }

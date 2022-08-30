@@ -29,9 +29,8 @@ namespace Banco_Morangao
             _agencia = agencia;
             _numConta = r.Next(100000, 9999999).ToString();
             _saldo = saldo;
-            _cartao = new Cartao();
+            _cartao = new Cartao(_limite, "10");
             _tipoConta = tipoConta;
-
         }
 
         private float calcularLimite(float renda)
@@ -40,7 +39,10 @@ namespace Banco_Morangao
             return limite;
         }
 
-
+        public override string ToString()
+        {
+            return $"Cliente: {_cliente}\nAgencia: {_agencia}\nNumero conta: {_numConta}\nSaldo: {_saldo}\nLimite: {_limite}\nTipo de conta: {_tipoConta}\nCARTAO\n{_cartao}".ToString();
+        }
 
     }
 }
