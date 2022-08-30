@@ -6,13 +6,13 @@ namespace Banco_Morangao
     {
         static void Main(string[] args)
         {
-            Pessoa pessoa;
+            Funcionario funcionario;
 
-            pessoa = coletarPessoa();
+            funcionario = coletarFuncionario();
 
             Console.Clear();
-            Console.WriteLine("Dados da pessoa: ");
-            Console.WriteLine(pessoa);
+            Console.WriteLine("Dados do funcionario: ");
+            Console.WriteLine(funcionario);
         }
 
 
@@ -70,6 +70,23 @@ namespace Banco_Morangao
             return new Pessoa(nome, telefone, endereco, email, cpf, genero);
         }
 
+        //metodo cadastrar funcionario
+        static Funcionario coletarFuncionario()
+        {
+            Pessoa pessoa;
+            String cargo, nivelAcesso;
+            pessoa = coletarPessoa();
+
+            Console.WriteLine("Informe o cargo do funcionário: ");
+            cargo = Console.ReadLine();
+
+            Console.WriteLine("Informe o nível de acesso do funcionário: ");
+            nivelAcesso = Console.ReadLine();
+
+            return new Funcionario(pessoa, cargo, nivelAcesso);
+
+
+        }
 
     }
 }

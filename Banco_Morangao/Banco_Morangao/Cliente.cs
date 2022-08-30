@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Banco_Morangao
 {
-    internal class Funconario
+    internal class Cliente
     {
     }
 }
