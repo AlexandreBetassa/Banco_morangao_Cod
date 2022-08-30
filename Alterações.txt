@@ -1,1 +1,1 @@
-alterado atributo Agencia para NumAgencia => conflito com o nome da classe
+alterado atributo Agencia para Ag => conflito com o nome da classe
