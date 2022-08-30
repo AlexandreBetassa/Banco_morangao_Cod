@@ -8,10 +8,10 @@ namespace Banco_Morangao
 {
     internal class Funcionario
     {
-        private Pessoa Pessoa { get; set; }
-        private String Id { get; set; }
-        private String Cargo { get; set; }
-        private String NivelAcesso { get; set; }
+        private Pessoa _pessoa { get; set; }
+        private String _id { get; set; }
+        private String _cargo { get; set; }
+        private String _nivelAcesso { get; set; }
 
         public Funcionario()
         {
@@ -20,15 +20,15 @@ namespace Banco_Morangao
         public Funcionario(Pessoa pessoa, string cargo, string nivelAcesso)
         {
             Random r = new Random();
-            Pessoa = pessoa;
-            Id = r.Next(10000, 999999).ToString();
-            Cargo = cargo;
-            NivelAcesso = nivelAcesso;
+            _pessoa = pessoa;
+            _id = r.Next(10000, 999999).ToString();
+            _cargo = cargo;
+            _nivelAcesso = nivelAcesso;
         }
 
         public override string ToString()
         {
-            return $"{Pessoa}\nID do Funcionário: {Id}\nCargo: {Cargo}\nNivel de Acesso: {NivelAcesso}".ToString();
+            return $"{_pessoa}\nID do Funcionário: {_id}\nCargo: {_cargo}\nNivel de Acesso: {_nivelAcesso}".ToString();
         }
     }
 }

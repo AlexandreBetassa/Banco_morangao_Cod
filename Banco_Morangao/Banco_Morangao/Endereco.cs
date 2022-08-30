@@ -8,12 +8,12 @@ namespace Banco_Morangao
 {
     internal class Endereco
     {
-        private String Logradouro { get; set; }
-        private String Numero { get; set; }
-        private String Bairro { get; set; }
-        private String Cidade { get; set; }
-        private String Cep { get; set; }
-        private String Complemento { get; set; }
+        private String _logradouro;
+        private String _numero { get; set; }
+        private String _bairro { get; set; }
+        private String _cidade { get; set; }
+        private String _cep { get; set; }
+        private String _complemento { get; set; }
 
         //construtor vazio
         public Endereco()
@@ -23,28 +23,28 @@ namespace Banco_Morangao
         //construtor de endereco sem complemento
         public Endereco(string logradouro, string numero, string bairro, string cidade, string cep)
         {
-            Logradouro = Console.ReadLine();
-            Numero = numero;
-            Bairro = bairro;
-            Cidade = cidade;
-            Cep = cep;
+            _logradouro = Console.ReadLine();
+            _numero = numero;
+            _bairro = bairro;
+            _cidade = cidade;
+            _cep = cep;
         }
 
         //construtor de endereco com complemento
         public Endereco(string logradouro, string numero, string bairro, string cidade, string cep, string complemento)
         {
-            Logradouro = logradouro;
-            Numero = numero;
-            Bairro = bairro;
-            Cidade = cidade;
-            Cep = cep;
-            Complemento = complemento;
+            _logradouro = Console.ReadLine();
+            _numero = numero;
+            _bairro = bairro;
+            _cidade = cidade;
+            _cep = cep;
+            _complemento = complemento;
         }
 
         //metodo override toString para escrita dos dados
         public override string ToString()
         {
-            return $"{Logradouro}, n°: {Numero}, Bairro: {Bairro}, Cidade: {Cidade}, CEP: {Cep}, Complemento: {Complemento}".ToString();
+            return $"{_logradouro}, n°: {_numero}, Bairro: {_bairro}, Cidade: {_cidade}, CEP: {_cep}, Complemento: {_complemento}".ToString();
         }
 
 

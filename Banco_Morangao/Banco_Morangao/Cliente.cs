@@ -8,5 +8,6 @@ namespace Banco_Morangao
 {
     internal class Cliente
     {
+        private bool _habilitado;
     }
 }
