@@ -6,13 +6,11 @@ namespace Banco_Morangao
     {
         static void Main(string[] args)
         {
-            Funcionario funcionario;
-
-            funcionario = coletarFuncionario();
-
+            Cliente cliente = cadastrarCliente();
             Console.Clear();
-            Console.WriteLine("Dados do funcionario: ");
-            Console.WriteLine(funcionario);
+            Console.WriteLine("CADASTRO DE CLIENTE");
+            Console.WriteLine("DADOS DO CLIENTE CADASTRADO COM SUCESSO\n\n\n ");
+            Console.WriteLine(cliente);
         }
 
 
@@ -86,6 +84,26 @@ namespace Banco_Morangao
             return new Funcionario(pessoa, cargo, nivelAcesso);
 
 
+        }
+
+        //metodo cadastrar cliente
+        static Cliente cadastrarCliente()
+        {
+            Pessoa pessoa;
+            String estudante;
+            float renda;
+            bool checkRenda;
+
+            pessoa = coletarPessoa();
+            Console.WriteLine("Estudante (Informe Sim ou Nao)");
+            estudante = Console.ReadLine();
+            Console.WriteLine("Informe a renda: ");
+            do
+            {
+                checkRenda = float.TryParse(Console.ReadLine(), out renda);
+            } while (checkRenda == false);
+
+            return new Cliente("Sim", pessoa, true, renda.ToString());
         }
 
     }
