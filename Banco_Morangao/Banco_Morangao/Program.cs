@@ -6,11 +6,14 @@ namespace Banco_Morangao
     {
         static void Main(string[] args)
         {
-            ContaCorrente cc = criarContaCorrente();
-            Console.Clear();
+            Console.WriteLine("CADASTRO DE CLIENTE");
+            Cliente cliente = cadastrarCliente();
+            // Console.Clear();
             Console.WriteLine("CADASTRO DE CLIENTE");
             Console.WriteLine("DADOS DO CLIENTE CADASTRADO COM SUCESSO\n\n\n ");
-            Console.WriteLine(cc);
+            Console.WriteLine(cliente);
+
+
         }
 
 
@@ -21,7 +24,7 @@ namespace Banco_Morangao
             int numero;
             bool checkNum;
 
-            Console.WriteLine("Informe o nome o logradouro com rua ou avenida: ");
+            Console.WriteLine("Informe o logradouro com rua ou avenida: ");
             logradouro = Console.ReadLine();
 
             Console.WriteLine("Informe o numero: ");
@@ -65,8 +68,8 @@ namespace Banco_Morangao
 
             Console.WriteLine("Informe o sexo da pessoa: ");
             genero = Console.ReadLine();
-
-            Console.WriteLine("Informe o endereço: ");
+            Console.Clear();
+            Console.WriteLine("INFORME O ENDEREÇO");
             endereco = coletarEndereco();
 
             return new Pessoa(nome, telefone, endereco, email, cpf, genero);
@@ -93,30 +96,30 @@ namespace Banco_Morangao
         //metodo cadastrar cliente
         static Cliente cadastrarCliente()
         {
+            ContaCorrente conta;
             Pessoa pessoa;
-            String estudante;
             float renda;
             bool checkRenda;
 
-            pessoa = coletarPessoa();
-            Console.WriteLine("Estudante (Informe Sim ou Nao)");
-            estudante = Console.ReadLine();
+            /* Console.WriteLine("Estudante (Informe Sim ou Nao)");
+            estudante = Console.ReadLine();*/
             Console.WriteLine("Informe a renda: ");
             do
             {
                 checkRenda = float.TryParse(Console.ReadLine(), out renda);
-            } while (checkRenda == false);
+                pessoa = coletarPessoa();
 
-            return new Cliente("Sim", pessoa, true, renda.ToString());
+            } while (checkRenda == false);
+            conta = criarContaCorrente(renda);
+
+            return new Cliente("Sim", pessoa, true, renda.ToString(), conta);
         }
 
         //criar conta corrente
-        static ContaCorrente criarContaCorrente()
+        static ContaCorrente criarContaCorrente(float renda)
         {
-            Cliente cliente;
             String agencia, tipoConta;
-            float saldoInicial, renda;
-            String dataVencimento;
+            float saldoInicial;
 
             Console.WriteLine("INFORME OS DADOS DA CONTA");
             Console.WriteLine("Informe o numero da agencia: ");
@@ -124,14 +127,10 @@ namespace Banco_Morangao
             Console.WriteLine("Informe o tipo de conta: ");
             tipoConta = Console.ReadLine();
             Console.WriteLine("Terá deposito inicial? ");
-            saldoInicial = float.Parse(Console.ReadLine());
-            Console.WriteLine("Informe a renda: ");
-            renda = float.Parse(Console.ReadLine());
+            float.TryParse(Console.ReadLine(), out saldoInicial);
             Console.Clear();
             Console.WriteLine("INFORME OS DADOS DO CLIENTE");
-            cliente = cadastrarCliente();
-
-            return new ContaCorrente(cliente, agencia, saldoInicial, tipoConta, renda);
+            return new ContaCorrente(agencia, saldoInicial, tipoConta, renda);
 
         }
 

@@ -13,25 +13,30 @@ namespace Banco_Morangao
         private string _habilitado;
         private Pessoa _pessoa;
         private bool _estudante;
-        protected string _renda;
-        //private Conta conta;
+        private string _renda;
+        private ContaCorrente conta;
 
         public Cliente() { }
 
-        public Cliente(string habilitado, Pessoa pessoa, bool estudante, string renda/*, Conta conta*/)
+        public Cliente(string habilitado, Pessoa pessoa, bool estudante, string renda, ContaCorrente conta)
         {
-            _habilitado = habilitado;   
+            _habilitado = habilitado;
             _pessoa = pessoa;
             _estudante = estudante;
             _renda = renda;
-            //Conta conta = conta
+            this.conta = conta;
         }
 
+        //metodo para coletar a renda do cliente
+        public float getRenda()
+        {
+            return float.Parse(_renda);
+        }
 
         public override string ToString()
         {
             //adicionar numero de conta no toString()
-            return $"Status do cliente: {_habilitado}\nCliente: {_pessoa}\nEstudante: {_estudante}\nRenda: {_renda}".ToString();
+            return $"\nCLIENTE\nStatus do cliente: {_habilitado}\n{_pessoa}\nEstudante: {_estudante}\nRenda: {_renda}\n\nCONTA CORRENTE\n{conta}".ToString();
         }
     }
 }

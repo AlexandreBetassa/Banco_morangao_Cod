@@ -34,7 +34,7 @@ namespace Banco_Morangao
 
         public override string ToString()
         {
-            return $"Numero do Cartão: {_numCartao}\nDigito verificador: {_digVerificador}\nData vencimento fatura: {_dataVencFatura}\nData de vencimento do cartão: {_validadeCartao.ToShortDateString()}Saldo: {_saldo}".ToString();
+            return $"Número do Cartão: {_numCartao}\nDigito verificador: {_digVerificador}\nData vencimento da fatura: {_dataVencFatura}\nData de vencimento do cartão: {_validadeCartao.ToShortDateString()}\nSaldo: {_saldo}".ToString();
         }
 
     }

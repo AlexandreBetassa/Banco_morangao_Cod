@@ -8,13 +8,12 @@ namespace Banco_Morangao
 {
     internal class Pessoa
     {
-        private String _nome { get; set; }
-        private String _telefone { get; set; }
-
-        private Endereco _endereco;
-        private String _email { get; set; }
-        private String _cpf { get; set; }
-        private String _genero { get; set; }
+        private String _nome;
+        private String _telefone;
+        public Endereco _endereco;
+        private String _email;
+        private String _cpf;
+        private String _genero;
 
         //metodo construtor vazio
         public Pessoa() { }

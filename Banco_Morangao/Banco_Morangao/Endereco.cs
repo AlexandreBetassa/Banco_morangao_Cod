@@ -9,31 +9,21 @@ namespace Banco_Morangao
     internal class Endereco
     {
         private String _logradouro;
-        private String _numero { get; set; }
-        private String _bairro { get; set; }
-        private String _cidade { get; set; }
-        private String _cep { get; set; }
-        private String _complemento { get; set; }
+        private String _numero;
+        private String _bairro;
+        private String _cidade;
+        private String _cep;
+        private String _complemento;
 
         //construtor vazio
         public Endereco()
         {
         }
 
-        //construtor de endereco sem complemento
-        public Endereco(string logradouro, string numero, string bairro, string cidade, string cep)
-        {
-            _logradouro = Console.ReadLine();
-            _numero = numero;
-            _bairro = bairro;
-            _cidade = cidade;
-            _cep = cep;
-        }
-
         //construtor de endereco com complemento
         public Endereco(string logradouro, string numero, string bairro, string cidade, string cep, string complemento)
         {
-            _logradouro = Console.ReadLine();
+            _logradouro = logradouro;
             _numero = numero;
             _bairro = bairro;
             _cidade = cidade;
