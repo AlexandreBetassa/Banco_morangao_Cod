@@ -6,23 +6,18 @@ using System.Threading.Tasks;
 
 namespace Banco_Morangao
 {
-    internal class ContaPoupanca
+    internal class ContaPoupanca : ContaCorrente
     {
         private float _saldo;
+        private List<String> _extrato = new List<String>();
 
-        public ContaPoupanca(float saldo)
+        public ContaPoupanca()
         {
-            _saldo = saldo;
-        }
-
-        public float getSaldo()
-        {
-            return _saldo;
         }
 
         public override string ToString()
         {
-            return $"\nCONTAPOUPANÇA\n Saldo: {_saldo}".ToString();
+            return $"\nCONTAPOUPANÇA\nSaldo: {_saldo.ToString("F")}".ToString();
         }
     }
 }

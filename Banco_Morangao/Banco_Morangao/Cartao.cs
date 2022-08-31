@@ -32,9 +32,16 @@ namespace Banco_Morangao
             _validadeCartao = DateTime.Now; //somar mais 5 anos "a fazer"
         }
 
+        //metodo para desbloquear cartão
+        public void setCartao(bool estado)
+        {
+            _habilitarCartao = estado;
+        }
+
+        //metodo ToString
         public override string ToString()
         {
-            return $"Número do Cartão: {_numCartao}\nDigito verificador: {_digVerificador}\nData vencimento da fatura: {_dataVencFatura}\nData de vencimento do cartão: {_validadeCartao.ToShortDateString()}\nSaldo: {_saldo}".ToString();
+            return $"Número do Cartão: {_numCartao}\nDigito verificador: {_digVerificador}\nData vencimento da fatura: {_dataVencFatura}\nData de vencimento do cartão: {_validadeCartao.ToShortDateString()}\nSaldo: {_saldo.ToString("F")}".ToString();
         }
 
     }
