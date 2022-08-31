@@ -10,16 +10,19 @@ namespace Banco_Morangao
     {
         private bool _habilitada;
         private String _agencia;
-        //private String _senha;
+        private String _senha;
         private String _numConta;
         private float _saldo;
         private float _limite;
         private Cartao _cartao;
         private String _tipoConta;
+        private ContaPoupanca _contaPoupanca;
 
         Random r = new Random();
 
-        //adicionar ao construtor senha quando funcionamento estiver correto
+        public ContaCorrente() { }
+
+        //adicionar ao construtor senha quando funcionamento estiver correto senha "a fazer"
         public ContaCorrente(string agencia, float saldo, string tipoConta, float renda)
         {
             _limite = calcularLimite(renda);
@@ -29,10 +32,10 @@ namespace Banco_Morangao
             _saldo = saldo;
             _cartao = new Cartao(_limite, "10");
             _tipoConta = tipoConta;
+            _contaPoupanca = new ContaPoupanca(0);
         }
 
-
-        private float calcularLimite(float renda)
+        protected float calcularLimite(float renda)
         {
             float limite = renda * (float)0.3;
             return limite;
