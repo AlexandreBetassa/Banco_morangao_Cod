@@ -78,10 +78,16 @@ namespace Banco_Morangao
         {
             return _agencia;
         }
+
         public String getNumConta()
         {
             return _numConta;
 
+        }
+
+        public void setHabilitado(bool valor)
+        {
+            _habilitada = valor;    
         }
 
         //metodo toString

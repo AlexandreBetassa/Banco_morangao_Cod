@@ -33,10 +33,15 @@ namespace Banco_Morangao
             return float.Parse(_renda);
         }
 
+        public void setHabilitarCliente(String valor)
+        {
+            _habilitado = valor;
+        }
+
         public override string ToString()
         {
             //adicionar numero de conta no toString()
-            return $"\nCLIENTE\nStatus do cliente: {_habilitado}\n{_pessoa}\nEstudante: {_estudante}\nRenda: {_renda}\n\nCONTA CORRENTE\n{conta}".ToString();
+            return $"\nCLIENTE\nStatus do cliente: {_habilitado}\n{_pessoa}\nEstudante: {_estudante}\nRenda: {_renda}\n".ToString();
         }
     }
 }

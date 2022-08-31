@@ -11,27 +11,25 @@ namespace Banco_Morangao
 
         static void Main(string[] args)
         {
-            for (int i = 0; i < 2; i++)
-            {
-                Cliente cliente = cadastrarCliente();
-                Console.Clear();
-                Console.WriteLine(cliente);
-            }
-
-            Console.ReadKey();
-
             do
             {
                 if (MenuSistema() == 1)
                 {
+                    Console.Clear();
+                    Console.WriteLine("### MENU CLIENTE ###");
                     MenuCliente();
                 }
-                else MenuFuncionario();
-
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("### MENU FUNCIONÁRIO ###");
+                    MenuFuncionario();
+                }
             } while (true);
 
         }
 
+        #region Menus
         //Menu
         static int MenuSistema()
         {
@@ -52,7 +50,7 @@ namespace Banco_Morangao
             int agencia;
 
             //informe o numero da agencia
-            Console.WriteLine("Informe o número da agência: ");
+            Console.Write("Informe o número da agência: ");
             do
             {
                 aux = int.TryParse(Console.ReadLine(), out agencia);
@@ -68,7 +66,7 @@ namespace Banco_Morangao
             int numConta;
 
             //informe o numero da agencia
-            Console.WriteLine("Informe o número da conta: ");
+            Console.Write("Informe o número da conta: ");
             do
             {
                 aux = int.TryParse(Console.ReadLine(), out numConta);
@@ -84,7 +82,7 @@ namespace Banco_Morangao
             bool aux;
             ContaCorrente conta = agencia.BuscarContaCorrente(SolicitarAgencia(), SolicitarNumConta());
 
-            Console.Write("Informe a operação: (1 - Sacar / 2 - Depositar / 3 - Pagar / 4 - Solicitar empréstimo / 5 - Consultas / 6 - Transferir)");
+            Console.Write("Informe a operação:\n(1 - Sacar / 2 - Depositar / 3 - Pagar\n4 - Solicitar empréstimo / 5 - Consultas / 6 - Transferir\n>)");
             do
             {
                 aux = int.TryParse(Console.ReadLine(), out op);
@@ -119,6 +117,77 @@ namespace Banco_Morangao
             }
         }
 
+        //Menu funcionario
+        static void MenuFuncionario()
+        {
+            int op;
+            bool aux;
+            Console.Write("Informe a operação: 1 - Cadastrar Cliente / 2 - Listar Clientes / 3 - Menu do gerente\n> ");
+            do
+            {
+                aux = int.TryParse(Console.ReadLine(), out op);
+            } while ((op < 1 || op > 3) || aux == false);
+
+            switch (op)
+            {
+                case 1:
+                    Console.Clear();
+                    Console.WriteLine("### CADASTRAR CLIENTE ###");
+                    CadastrarCliente();
+                    break;
+                case 2:
+                    Console.Clear();
+                    Console.WriteLine("### LISTAR CLIENTES ###");
+                    agencia.getListClientes();
+                    agencia.getListConta();
+                    break;
+                case 3:
+                    Console.Clear();
+                    Console.WriteLine("### FUNÇÕES GERENTES ###");
+                    MenuGerente();
+                    break;
+            }
+        }
+
+        //Menu gerente
+        static void MenuGerente()
+        {
+            int op;
+            bool aux;
+            Console.Write("Informe a operação: 1 - Cadastrar Funcionário / 2 - Listar Funcionário / 3 - Aprovações\n>");
+            do
+            {
+                aux = int.TryParse(Console.ReadLine(), out op);
+            } while ((op < 1 || op > 3) || aux == false);
+
+            switch (op)
+            {
+                case 1:
+                    Console.Clear();
+                    Console.WriteLine("### CADASTRAR FUNCIONÁRIO ###");
+                    CadastrarFuncionario();
+                    Console.WriteLine("\n\n### FUNCIONÁRIO CADASTRADO COM SUCESSO ###\nPRESSIONE QUALQUER TECLA...");
+                    Console.ReadKey();
+                    break;
+                case 2:
+                    Console.Clear();
+                    Console.WriteLine("### LISTAR FUNCIONÁRIOS ###");
+                    agencia.getListFuncionarios();
+                    Console.WriteLine("\n\n### FIM ###\nPRESSIONE QUALQUER TECLA...");
+                    Console.ReadKey();
+                    break;
+                case 3:
+                    Console.Clear();
+                    Console.WriteLine("### APROVAR SOLICITAÇÕES###");
+                    Aprovacao();
+                    Console.WriteLine("\n\n### FIM ###\nPRESSIONE QUALQUER TECLA...");
+                    Console.ReadKey();
+                    break;
+            }
+        }
+        #endregion Menus
+
+        #region Cliente
         //TRANSFERIR
         static void Tranferir(ContaCorrente conta)
         {
@@ -165,7 +234,7 @@ namespace Banco_Morangao
                 aux = float.TryParse(Console.ReadLine(), out valor);
             } while (aux == false);
 
-            conta.MovimentarEntrada(valor);
+            conta.MovimentarEntrada("Depósito", valor);
             Console.WriteLine("Saldo após transação: " + conta.getSaldo());
         }
 
@@ -184,25 +253,11 @@ namespace Banco_Morangao
             Console.WriteLine("Saldo após transação: " + conta.getSaldo());
         }
 
-        //Menu funcionario
-        static void MenuFuncionario()
-        {
-            int op;
-            bool aux;
-            Console.Write("Informe a operação: ");
-            do
-            {
-                aux = int.TryParse(Console.ReadLine(), out op);
-            } while ((op != 1 || op != 2) || aux == false);
+        #endregion Cliente
 
-        }
-
-
-
-
-        //_________________________________________________________________________________________________
+        #region Funcionário
         //metodo para coletar endereco
-        static Endereco coletarEndereco()
+        static Endereco ColetarEndereco()
         {
             string logradouro, bairro, cidade, cep, complemento;
             int numero;
@@ -233,7 +288,7 @@ namespace Banco_Morangao
         }
 
         //metodo coletar dados pessoa
-        static Pessoa coletarPessoa()
+        static Pessoa ColetarPessoa()
         {
             string nome, telefone, email, cpf, genero;
             Endereco endereco;
@@ -254,29 +309,30 @@ namespace Banco_Morangao
             genero = Console.ReadLine();
             Console.Clear();
             Console.WriteLine("INFORME O ENDEREÇO");
-            endereco = coletarEndereco();
+            endereco = ColetarEndereco();
 
             return new Pessoa(nome, telefone, endereco, email, cpf, genero);
         }
 
         //metodo cadastrar funcionario
-        static Funcionario coletarFuncionario()
+        static void CadastrarFuncionario()
         {
             Pessoa pessoa;
             String cargo, nivelAcesso;
 
-            pessoa = coletarPessoa();
+            pessoa = ColetarPessoa();
             Console.WriteLine("Informe o cargo do funcionário: ");
             cargo = Console.ReadLine();
 
             Console.WriteLine("Informe o nível de acesso do funcionário: ");
             nivelAcesso = Console.ReadLine();
 
-            return new Funcionario(pessoa, cargo, nivelAcesso);
+            Funcionario funcionario = new Funcionario(pessoa, cargo, nivelAcesso);
+            agencia.setFuncList(funcionario);
         }
 
         //metodo cadastrar cliente
-        static Cliente cadastrarCliente()
+        static void CadastrarCliente()
         {
             ContaCorrente conta;
             Pessoa pessoa;
@@ -289,17 +345,17 @@ namespace Banco_Morangao
             do
             {
                 checkRenda = float.TryParse(Console.ReadLine(), out renda);
-                pessoa = coletarPessoa();
-
             } while (checkRenda == false);
-            conta = criarContaCorrente(renda);
-            agencia.setContaList(conta);
 
-            return new Cliente("Sim", pessoa, true, renda.ToString(), conta);
+            pessoa = ColetarPessoa();
+            conta = CriarContaCorrente(renda);
+
+            Cliente cliente = new Cliente("Aguardando aprovação", pessoa, true, renda.ToString(), conta);
+            agencia.setListaAprovacao(cliente);
         }
 
         //criar conta corrente
-        static ContaCorrente criarContaCorrente(float renda)
+        static ContaCorrente CriarContaCorrente(float renda)
         {
             String agencia, tipoConta;
             float saldoInicial;
@@ -314,8 +370,42 @@ namespace Banco_Morangao
             Console.Clear();
             Console.WriteLine("INFORME OS DADOS DO CLIENTE");
             return new ContaCorrente(agencia, saldoInicial, tipoConta, renda);
-
         }
 
+        #endregion Funcionário
+
+        #region Gerente
+        static void Aprovacao()
+        {
+            int op;
+            bool aux;
+            agencia.BuscarAprovacoes();
+            Cliente cliente = agencia.BuscarAprovacoes();
+            if (cliente != null)
+            {
+                Console.WriteLine(cliente.ToString());
+                Console.WriteLine("Deseja aprovar a abertura dessa conta? 1 - Sim / 2 - Não");
+                do
+                {
+                    aux = int.TryParse(Console.ReadLine(), out op);
+                } while (aux == false);
+
+                if (op == 1)
+                {
+                    cliente.conta.setHabilitado(true);
+                    Console.WriteLine("Aprovado");
+                    agencia.setContaList(cliente.conta);
+                    agencia.DelListaAprovacao(cliente);
+                }
+                else
+                {
+                    cliente.conta.setHabilitado(false);
+                    Console.WriteLine("Reprovado");
+                    agencia.DelListaAprovacao(cliente);
+                }
+            }
+        }
+
+        #endregion Gerente
     }
 }

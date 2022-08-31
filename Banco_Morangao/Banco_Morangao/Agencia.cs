@@ -13,23 +13,22 @@ namespace Banco_Morangao
         private List<Cliente> _listCliente = new List<Cliente>();
         private List<Funcionario> _listFuncionario = new List<Funcionario>();
         private List<ContaCorrente> _listContaCorrente = new List<ContaCorrente>();
+        private List<Cliente> _listAprovacoesCliente = new List<Cliente>();
 
 
         public Agencia()
         {
         }
-
         //metodo para listagem de clientes
         public void getListClientes()
         {
-            foreach (var item in _listAgencia) Console.WriteLine(item);
+            foreach (var item in _listCliente) Console.WriteLine(item);
         }
         //metodo para listagem de funcionarios
         public void getListFuncionarios()
         {
-            foreach (var item in _listFuncionario) Console.WriteLine(item);
+            foreach (var item in _listFuncionario) Console.WriteLine($"FUNCIONÁRIO: {_listFuncionario.IndexOf(item)}\n{item}\n");
         }
-
         //metodo para adicionar cliente na lista
         public void setClienteList(Cliente cliente)
         {
@@ -56,10 +55,35 @@ namespace Banco_Morangao
             _listFuncionario.Remove(funcionario);
         }
 
-        public List<Cliente> ListaClientes()
+        public void getListConta()
         {
-            return _listCliente;    
+            foreach (var item in _listContaCorrente) Console.WriteLine(item);
         }
+
+        public Cliente BuscarAprovacoes()
+        {
+            foreach (var item in _listAprovacoesCliente)
+            {
+                if (item != null)
+                {
+                    return item;
+                }
+            }
+            Console.WriteLine("Não há novas aprovações a serem realizadas");
+            return null;
+        }
+
+        public void setListaAprovacao(Cliente cliente)
+        {
+            _listAprovacoesCliente.Add(cliente);
+            Console.WriteLine("Aguarde aprovação do gerente");
+        }
+
+        public void DelListaAprovacao(Cliente cliente)
+        {
+            _listAprovacoesCliente.Remove(cliente);
+        }
+        //buscar conta
         public ContaCorrente BuscarContaCorrente(string agencia, string numConta)
         {
             foreach (ContaCorrente conta in _listContaCorrente)
