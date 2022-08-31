@@ -14,7 +14,7 @@ namespace Banco_Morangao
         private Pessoa _pessoa;
         private bool _estudante;
         private string _renda;
-        private ContaCorrente conta;
+        public ContaCorrente conta;
 
         public Cliente() { }
 

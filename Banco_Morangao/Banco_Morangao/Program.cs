@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Runtime.Intrinsics.X86;
+using System.Text.RegularExpressions;
 
 namespace Banco_Morangao
 {
@@ -6,17 +8,115 @@ namespace Banco_Morangao
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("CADASTRO DE CLIENTE");
-            Cliente cliente = cadastrarCliente();
-            // Console.Clear();
-            Console.WriteLine("CADASTRO DE CLIENTE");
-            Console.WriteLine("DADOS DO CLIENTE CADASTRADO COM SUCESSO\n\n\n ");
-            Console.WriteLine(cliente);
+            do
+            {
+                if (MenuSistema() == 1)
+                {
+                    MenuCliente();
+                }
+                else MenuFuncionario();
 
+            } while (true);
+
+        }
+
+        //Menu
+        static int MenuSistema()
+        {
+            int op;
+            bool aux;
+
+            Console.Write("Informe se voce é cliente ou funcionário: (1 - Cliente ou 2 - Funcionário)");
+            do
+            {
+                aux = int.TryParse(Console.ReadLine(), out op);
+            } while ((op != 1 || op != 2) || aux == false);
+            return op;
+        }
+
+        //Solicitar numero da agencia
+        static String SolicitarAgencia()
+        {
+            bool aux;
+            int agencia;
+
+            //informe o numero da agencia
+            Console.WriteLine("Informe o número da agência: ");
+            do
+            {
+                aux = int.TryParse(Console.ReadLine(), out agencia);
+            } while (aux == false);
+
+            return agencia.ToString();
+        }
+
+        //Solicitar numero da conta
+        static String SolicitarNumConta()
+        {
+            bool aux;
+            int numConta;
+
+            //informe o numero da agencia
+            Console.WriteLine("Informe o número da conta: ");
+            do
+            {
+                aux = int.TryParse(Console.ReadLine(), out numConta);
+            } while (aux == false);
+
+            return numConta.ToString();
+        }
+
+        //Menu do cliente
+        static void MenuCliente()
+        {
+            int op;
+            bool aux;
+            Console.Write("Informe a operação: (1 - Sacar / 2 - Depositar / 3 - Pagar / 4 - Solicitar empréstimo / 5 - Consultas)");
+            do
+            {
+                aux = int.TryParse(Console.ReadLine(), out op);
+            } while ((op < 1 || op > 5) || aux == false);
+
+            Console.Clear();
+            switch (op)
+            {
+                case 1:
+                    Sacar();
+                    break;
+            }
+        }
+
+        //SACAR
+        static void Sacar()
+        {
+            float valor;
+            bool aux;
+            Console.WriteLine("### SACAR ###");
+            Console.Write("Informe o valor que deseja sacar: ");
+            do
+            {
+                aux = float.TryParse(Console.ReadLine(), out valor);
+            } while (aux == false);
+
+        }
+
+        //Menu funcionario
+        static void MenuFuncionario()
+        {
+            int op;
+            bool aux;
+            Console.Write("Informe a operação: ");
+            do
+            {
+                aux = int.TryParse(Console.ReadLine(), out op);
+            } while ((op != 1 || op != 2) || aux == false);
 
         }
 
 
+
+
+        //_________________________________________________________________________________________________
         //metodo para coletar endereco
         static Endereco coletarEndereco()
         {

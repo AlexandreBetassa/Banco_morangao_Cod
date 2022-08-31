@@ -30,7 +30,7 @@ namespace Banco_Morangao
             _limite = CalcularLimite(renda);
             _habilitada = false;
             _agencia = agencia;
-            _numConta = r.Next(100000, 9999999).ToString();
+            _numConta = r.Next(1000, 9999).ToString();
             _saldo = saldo;
             _cartao = new Cartao(_limite, "10");
             _tipoConta = tipoConta;
@@ -67,6 +67,16 @@ namespace Banco_Morangao
         public void getExtrato()
         {
             foreach (var item in _extrato) Console.WriteLine(item);
+        }
+
+        public String getAgencia()
+        {
+            return _agencia;
+        }
+        public String getNumConta()
+        {
+            return _numConta;
+
         }
 
         //metodo toString
