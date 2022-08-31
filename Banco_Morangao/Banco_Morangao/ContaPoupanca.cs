@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Banco_Morangao
 {
-    internal class ContaPoupanca : ContaCorrente
+    internal class ContaPoupanca
     {
         private float _saldo;
 
