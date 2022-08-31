@@ -30,7 +30,6 @@ namespace Banco_Morangao
             foreach (var item in _listFuncionario) Console.WriteLine(item);
         }
 
-
         //metodo para adicionar cliente na lista
         public void setClienteList(Cliente cliente)
         {
@@ -41,7 +40,11 @@ namespace Banco_Morangao
         {
             _listFuncionario.Add(funcionario);
         }
-
+        //metodo para adicionar contas na lista
+        public void setContaList(ContaCorrente conta)
+        {
+            _listContaCorrente.Add(conta);
+        }
         //metodo para remover cliente da lista
         public void DelClienteList(Cliente cliente)
         {
@@ -53,6 +56,10 @@ namespace Banco_Morangao
             _listFuncionario.Remove(funcionario);
         }
 
+        public List<Cliente> ListaClientes()
+        {
+            return _listCliente;    
+        }
         public ContaCorrente BuscarContaCorrente(string agencia, string numConta)
         {
             foreach (ContaCorrente conta in _listContaCorrente)

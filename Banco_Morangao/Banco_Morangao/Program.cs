@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http.Headers;
 using System.Runtime.Intrinsics.X86;
 using System.Text.RegularExpressions;
 
@@ -6,8 +7,19 @@ namespace Banco_Morangao
 {
     internal class Program
     {
+        static Agencia agencia = new Agencia();
+
         static void Main(string[] args)
         {
+            for (int i = 0; i < 2; i++)
+            {
+                Cliente cliente = cadastrarCliente();
+                Console.Clear();
+                Console.WriteLine(cliente);
+            }
+
+            Console.ReadKey();
+
             do
             {
                 if (MenuSistema() == 1)
@@ -25,12 +37,11 @@ namespace Banco_Morangao
         {
             int op;
             bool aux;
-
-            Console.Write("Informe se voce é cliente ou funcionário: (1 - Cliente ou 2 - Funcionário)");
+            Console.Write("Informe se voce é cliente ou funcionário: (1 - Cliente ou 2 - Funcionário)\n>");
             do
             {
                 aux = int.TryParse(Console.ReadLine(), out op);
-            } while ((op != 1 || op != 2) || aux == false);
+            } while ((op != 1 && op != 2) || aux == false);
             return op;
         }
 
@@ -71,33 +82,106 @@ namespace Banco_Morangao
         {
             int op;
             bool aux;
-            Console.Write("Informe a operação: (1 - Sacar / 2 - Depositar / 3 - Pagar / 4 - Solicitar empréstimo / 5 - Consultas)");
+            ContaCorrente conta = agencia.BuscarContaCorrente(SolicitarAgencia(), SolicitarNumConta());
+
+            Console.Write("Informe a operação: (1 - Sacar / 2 - Depositar / 3 - Pagar / 4 - Solicitar empréstimo / 5 - Consultas / 6 - Transferir)");
             do
             {
                 aux = int.TryParse(Console.ReadLine(), out op);
-            } while ((op < 1 || op > 5) || aux == false);
+            } while ((op < 1 && op > 5) || aux == false);
 
             Console.Clear();
             switch (op)
             {
                 case 1:
-                    Sacar();
+                    Console.WriteLine("### SACAR ###");
+                    Sacar(conta);
+                    break;
+                case 2:
+                    Console.WriteLine("### DEPOSITAR ###");
+                    Depositar(conta);
+                    break;
+                case 3:
+                    Console.WriteLine("### PAGAR ###");
+                    Sacar(conta);
+                    break;
+                case 4:
+                    Console.WriteLine("### EMPRÉSTIMO ###");
+                    break;
+                case 5:
+                    Console.WriteLine("### CONSULTAS ###");
+                    Consultar(conta);
+                    break;
+                case 6:
+                    Console.WriteLine("### TRANSFERIR ###");
+                    Tranferir(conta);
                     break;
             }
         }
 
-        //SACAR
-        static void Sacar()
+        //TRANSFERIR
+        static void Tranferir(ContaCorrente conta)
+        {
+            bool aux;
+            float valor;
+            Console.WriteLine("INFORME OS DADOS DA CONTA CORRENTE DESTINO");
+            ContaCorrente contaDestino = agencia.BuscarContaCorrente(SolicitarAgencia(), SolicitarNumConta());
+            Console.Write("Informe o valor: ");
+            do
+            {
+                aux = float.TryParse(Console.ReadLine(), out valor);
+            } while (aux == false);
+            conta.MovimentarSaida("Transferência", valor);
+            contaDestino.MovimentarEntrada("Transferência", valor);
+
+            Console.WriteLine($"Saldo conta titular: {conta.getSaldo()}");
+            Console.WriteLine($"Saldo conta destino: {contaDestino.getSaldo()}");
+        }
+
+        //CONSULTAS
+        static void Consultar(ContaCorrente conta)
+        {
+            int op;
+            bool aux;
+
+            Console.Write("O que deseja consultar: 1 - Saldo / 2 - Extrato");
+            do
+            {
+                aux = int.TryParse(Console.ReadLine(), out op);
+            } while (aux == false);
+
+            if (op == 1) Console.WriteLine("Saldo Atual conta corrente: " + conta.getSaldo().ToString("F"));
+            else conta.getExtrato();
+        }
+
+        //DEPOSITAR
+        static void Depositar(ContaCorrente conta)
         {
             float valor;
             bool aux;
-            Console.WriteLine("### SACAR ###");
-            Console.Write("Informe o valor que deseja sacar: ");
+            Console.Write("Informe o valor: ");
             do
             {
                 aux = float.TryParse(Console.ReadLine(), out valor);
             } while (aux == false);
 
+            conta.MovimentarEntrada(valor);
+            Console.WriteLine("Saldo após transação: " + conta.getSaldo());
+        }
+
+        //SACAR
+        static void Sacar(ContaCorrente conta)
+        {
+            float valor;
+            bool aux;
+            Console.Write("Informe o valor: ");
+            do
+            {
+                aux = float.TryParse(Console.ReadLine(), out valor);
+            } while (aux == false);
+
+            conta.MovimentarSaida("Saque", valor);
+            Console.WriteLine("Saldo após transação: " + conta.getSaldo());
         }
 
         //Menu funcionario
@@ -189,8 +273,6 @@ namespace Banco_Morangao
             nivelAcesso = Console.ReadLine();
 
             return new Funcionario(pessoa, cargo, nivelAcesso);
-
-
         }
 
         //metodo cadastrar cliente
@@ -211,6 +293,7 @@ namespace Banco_Morangao
 
             } while (checkRenda == false);
             conta = criarContaCorrente(renda);
+            agencia.setContaList(conta);
 
             return new Cliente("Sim", pessoa, true, renda.ToString(), conta);
         }

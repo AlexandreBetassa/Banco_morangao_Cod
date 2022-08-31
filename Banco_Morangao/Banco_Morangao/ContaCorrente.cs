@@ -44,17 +44,17 @@ namespace Banco_Morangao
         }
 
         //metodo para movimentar saida de saldo da conta
-        public void MovimentarSaida(float valor)
+        public void MovimentarSaida(string operacao, float valor)
         {
             _saldo -= valor;
-            _extrato.Add($"Saida: -{valor}, Data: {DateTime.Now.ToShortDateString()}");
+            _extrato.Add($"Saida: -{valor}\tOperação: {operacao}\tData: {DateTime.Now.ToShortDateString()}");
         }
 
         //metodo para movimentar saida de saldo da conta
-        public void MovimentarEntrada(float valor)
+        public void MovimentarEntrada(string operacao, float valor)
         {
             _saldo += valor;
-            _extrato.Add($"Deposito: +{valor}, Data: {DateTime.Now.ToShortDateString()}");
+            _extrato.Add($"Deposito: + {valor}\tOperação: {operacao}\tData: {DateTime.Now.ToShortDateString()}");
         }
 
         //metodo para retorno de saldo
@@ -66,7 +66,12 @@ namespace Banco_Morangao
         //metodo para puxa extrato
         public void getExtrato()
         {
+            Console.Clear();
+            Console.WriteLine("### EXTRATO ###\n");
+            Console.WriteLine($"Conta: {_numConta}\tAgência: {_agencia}\n");
             foreach (var item in _extrato) Console.WriteLine(item);
+            Console.WriteLine("### FIM EXTRATO ###\nPressione ENTER para continuar...");
+            Console.ReadKey();
         }
 
         public String getAgencia()
