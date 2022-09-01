@@ -15,7 +15,6 @@ namespace Banco_Morangao
         private List<ContaCorrente> _listContaCorrente = new List<ContaCorrente>();
         private List<Cliente> _listAprovacoesCliente = new List<Cliente>();
 
-
         public Agencia()
         {
         }

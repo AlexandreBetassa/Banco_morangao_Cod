@@ -11,13 +11,13 @@ namespace Banco_Morangao
     internal class Cliente
     {
         private Pessoa _pessoa;
-        private bool _estudante;
+        private String _estudante;
         private string _renda;
         public ContaCorrente conta;
 
         public Cliente() { }
 
-        public Cliente(Pessoa pessoa, bool estudante, string renda, ContaCorrente conta)
+        public Cliente(Pessoa pessoa, String estudante, string renda, ContaCorrente conta)
         {
             _pessoa = pessoa;
             _estudante = estudante;

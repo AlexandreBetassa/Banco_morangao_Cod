@@ -9,11 +9,11 @@ namespace Banco_Morangao
     {
         static Agencia agencia = new Agencia();
 
-
         static void Main(string[] args)
         {
             string senhaFuncionario = "1111";
             string senha;
+            string op;
             do
             {
                 if (MenuSistema() == 1)
@@ -35,13 +35,15 @@ namespace Banco_Morangao
                     else
                     {
                         Console.WriteLine("Senha Inválida");
-                        Console.WriteLine("PRESSIONE QUALQUER TECLA PARA CONTINUAR");
+                        Console.WriteLine("PRESSIONE QUALQUER TECLA PARA RETORNAR AO INICIO");
                         Console.ReadKey();
                         Console.Clear();
                     }
                 }
-            } while (true);
+                Console.WriteLine("Deseja efetuar nova transação: ");
+                op = ColetarString();
 
+            } while (op != "NAO");
         }
 
         #region Menus
@@ -82,6 +84,7 @@ namespace Banco_Morangao
         static void MenuCliente()
         {
             int op;
+            string senha;
             ContaCorrente conta = agencia.BuscarContaCorrente(SolicitarAgencia(), SolicitarNumConta());
             if (conta == null)
             {
@@ -91,6 +94,30 @@ namespace Banco_Morangao
             }
             else
             {
+                int i = 0;
+                Console.WriteLine($"Por favor {conta.getNome()} informe sua senha para continuar");
+                senha = ColetarString();
+                do
+                {
+                    if (i == 2)
+                    {
+                        Console.WriteLine("Seu número de tentativas expirou");
+                        Console.WriteLine("Pressione enter para continuar...");
+                        Console.ReadKey();
+                        Console.Clear();
+                    }
+                    Console.WriteLine($"Por favor {conta.getNome()} informe sua senha para continuar");
+                    senha = ColetarString();
+                    if (conta.getSenha() != senha)
+                    {
+                        Console.WriteLine($"Senha Incorreta\nTentativa {i + 1}");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                    i++;
+                } while (i < 3);
                 Console.WriteLine($"Bem vindo: {conta.getNome()}");
             }
             do
@@ -256,6 +283,42 @@ namespace Banco_Morangao
             Console.WriteLine("Saldo após transação: " + conta.getSaldo());
         }
 
+        //FINALIZAR ESSA PARTE AMANHÃ
+        static void SolicitarEmprestimo(ContaCorrente conta)
+        {
+            float valor;
+            string confirmar;
+            Console.WriteLine("Informe o valor que deseja emprestar:");
+            valor = ColetarValorFloat();
+            valor = CalcularCustoEmprestimo(valor, conta.getTipoConta());
+            Console.WriteLine($"Custo do empréstimo: R$ {valor.ToString("F")}");
+            Console.WriteLine("Deseja confirmar o empréstimo? sim ou nao");
+            do
+            {
+                confirmar = ColetarString();
+            } while (confirmar != "SIM" && confirmar != "NAO");
+            if (confirmar == "SIM")
+            {
+                conta.MovimentarEntrada("Empréstimo", valor);
+                conta.setExtrato("Deb. Empréstimo", valor);
+            }
+            else
+            {
+                Console.WriteLine("Operação cancelada!!!");
+
+                return;
+            }
+        }
+        //FINALIZAR AMANHA
+
+
+        static float CalcularCustoEmprestimo(float valor, string tipoConta)
+        {
+            if (tipoConta == "NORMAL") return valor * (float)1.5;
+            else if (tipoConta == "VIP") return valor * (float)1.1;
+            else return valor * (float)1.2;
+        }
+
         #endregion Cliente
 
         #region Funcionário
@@ -304,7 +367,7 @@ namespace Banco_Morangao
             } while (VerificarCpf(cpf) == false);
 
             Console.WriteLine("Informe o E-mail (Caso Houver):");
-            email = ColetarString();
+            email = Console.ReadLine();
 
             Console.WriteLine("Informe o sexo da pessoa: ");
             genero = ColetarString();
@@ -340,22 +403,27 @@ namespace Banco_Morangao
             ContaCorrente conta;
             Pessoa pessoa;
             float renda;
+            String estudante;
 
-            /* Console.WriteLine("Estudante (Informe Sim ou Nao)");
-            estudante = Console.ReadLine();*/
+            Console.WriteLine("Estudante (Informe Sim ou Nao)");
+            do
+            {
+                estudante = ColetarString();
+            } while (estudante != "SIM" && estudante != "NAO");
             Console.WriteLine("Informe a renda: ");
             renda = ColetarValorFloat();
             pessoa = ColetarPessoa();
             conta = CriarContaCorrente(renda, pessoa);
 
-            Cliente cliente = new Cliente(pessoa, true, renda.ToString(), conta);
+            Cliente cliente = new Cliente(pessoa, estudante, renda.ToString(), conta);
+            Console.WriteLine($"\n{cliente}\n\n{cliente.conta}");
             agencia.setListaAprovacaoContas(cliente);
         }
 
         //criar conta corrente
         static ContaCorrente CriarContaCorrente(float renda, Pessoa pessoa)
         {
-            String agencia, tipoConta;
+            String agencia, tipoConta, senha;
             float saldoInicial;
 
             Console.WriteLine("INFORME OS DADOS DA CONTA");
@@ -368,8 +436,10 @@ namespace Banco_Morangao
             } while (VerificarContaInformada(tipoConta) == false);
             Console.WriteLine("Terá deposito inicial? Informe o valor. Caso não houver pressione ENTER");
             float.TryParse(Console.ReadLine(), out saldoInicial);
+            Console.WriteLine("Informe uma senha para sua conta: Pode incluir numeros, simbolos e digitos numéricos");
+            senha = ColetarString();
             Console.Clear();
-            return new ContaCorrente(agencia, saldoInicial, tipoConta, renda, pessoa);
+            return new ContaCorrente(agencia, saldoInicial, tipoConta, renda, pessoa, senha);
         }
 
         #endregion Funcionário
@@ -435,7 +505,7 @@ namespace Banco_Morangao
             return valor;
         }
 
-        //metodo´para nao coletar string em branco
+        //metodo para nao coletar string em branco
         static String ColetarString()
         {
             String texto;

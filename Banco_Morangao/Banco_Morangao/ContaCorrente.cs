@@ -26,7 +26,7 @@ namespace Banco_Morangao
         public ContaCorrente() { }
 
         //adicionar ao construtor senha quando funcionamento estiver correto senha "a fazer"
-        public ContaCorrente(string agencia, float saldo, string tipoConta, float renda, Pessoa pessoa)
+        public ContaCorrente(string agencia, float saldo, string tipoConta, float renda, Pessoa pessoa, String senha)
         {
             _limite = CalcularLimite(renda);
             _habilitada = false;
@@ -37,6 +37,7 @@ namespace Banco_Morangao
             _tipoConta = tipoConta;
             _contaPoupanca = new ContaPoupanca();
             _pessoa = pessoa;
+            _senha = senha;
         }
 
         protected float CalcularLimite(float renda)
@@ -95,6 +96,21 @@ namespace Banco_Morangao
         public String getNome()
         {
             return _pessoa.getNome();
+        }
+
+        public String getSenha()
+        {
+            return _senha;
+        }
+
+        public String getTipoConta()
+        {
+            return _tipoConta;
+        }
+
+        public void setExtrato(string operacao, float valor)
+        {
+            _extrato.Add($"Saida: -{valor}\tOperação: {operacao}\tData: {DateTime.Now.ToShortDateString()}");
         }
 
         //metodo toString
