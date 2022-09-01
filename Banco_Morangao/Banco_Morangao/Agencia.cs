@@ -19,30 +19,62 @@ namespace Banco_Morangao
         public Agencia()
         {
         }
-        //metodo para listagem de clientes
+
         public void getListClientes()
         {
-            foreach (var item in _listCliente) Console.WriteLine(item);
+            foreach (var item in _listCliente)
+            {
+                if (item != null)
+                {
+                    Console.WriteLine(item);
+                }
+                else
+                {
+                    Console.WriteLine("Não há clientes a serem listados");
+                    Console.WriteLine("Pressione Enter para continuar...");
+                    Console.Clear();
+                    Console.ReadKey();
+                }
+            }
         }
         //metodo para listagem de funcionarios
         public void getListFuncionarios()
         {
-            foreach (var item in _listFuncionario) Console.WriteLine($"FUNCIONÁRIO: {_listFuncionario.IndexOf(item)}\n{item}\n");
+            foreach (var item in _listFuncionario)
+                if (item != null)
+                {
+                    Console.WriteLine($"FUNCIONÁRIO: {_listFuncionario.IndexOf(item)}\n{item}\n");
+                }
+                else
+                {
+                    Console.WriteLine("Não há clientes a serem listados");
+                    Console.WriteLine("Pressione Enter para continuar...");
+                    Console.Clear();
+                    Console.ReadKey();
+                }
+
         }
         //metodo para adicionar cliente na lista
         public void setClienteList(Cliente cliente)
         {
             _listCliente.Add(cliente);
+
         }
         //metodo para adicionar funcionario na lista
         public void setFuncList(Funcionario funcionario)
         {
             _listFuncionario.Add(funcionario);
+            Console.WriteLine("Funcionário cadastrado com sucesso!!");
+            Console.WriteLine("Pressione qualquer tecla para continuar...");
+            Console.ReadKey();
         }
         //metodo para adicionar contas na lista
         public void setContaList(ContaCorrente conta)
         {
             _listContaCorrente.Add(conta);
+            Console.WriteLine("Conta cadastrada com sucesso!!!");
+            Console.WriteLine("Pressione Enter para continuar..");
+            Console.ReadKey();
         }
         //metodo para remover cliente da lista
         public void DelClienteList(Cliente cliente)
@@ -54,12 +86,16 @@ namespace Banco_Morangao
         {
             _listFuncionario.Remove(funcionario);
         }
-
+        //metodo para listagem de contas cadastradas
         public void getListConta()
         {
-            foreach (var item in _listContaCorrente) Console.WriteLine(item);
+            foreach (var item in _listContaCorrente)
+            {
+                if (item != null) Console.WriteLine(item + "\n");
+                else Console.WriteLine("Não há contas cadastradas");
+            }
         }
-
+        //metodo para retornar contas para aprovação
         public Cliente BuscarAprovacoes()
         {
             foreach (var item in _listAprovacoesCliente)
@@ -72,18 +108,18 @@ namespace Banco_Morangao
             Console.WriteLine("Não há novas aprovações a serem realizadas");
             return null;
         }
-
-        public void setListaAprovacao(Cliente cliente)
+        //metodo para adicionar contas para aprovação
+        public void setListaAprovacaoContas(Cliente cliente)
         {
             _listAprovacoesCliente.Add(cliente);
             Console.WriteLine("Aguarde aprovação do gerente");
         }
-
+        //metodo para remover solicitação da lista após processada
         public void DelListaAprovacao(Cliente cliente)
         {
             _listAprovacoesCliente.Remove(cliente);
         }
-        //buscar conta
+        //buscar conta de usuário
         public ContaCorrente BuscarContaCorrente(string agencia, string numConta)
         {
             foreach (ContaCorrente conta in _listContaCorrente)

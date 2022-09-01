@@ -29,6 +29,11 @@ namespace Banco_Morangao
             _genero = genero;
         }
 
+        public String getNome()
+        {
+            return _nome;
+        }
+
         //metodo override
         public override string ToString()
         {

@@ -8,6 +8,7 @@ namespace Banco_Morangao
 {
     internal class ContaCorrente
     {
+        private Pessoa _pessoa;
         private bool _habilitada;
         private String _agencia;
         private String _senha;
@@ -25,7 +26,7 @@ namespace Banco_Morangao
         public ContaCorrente() { }
 
         //adicionar ao construtor senha quando funcionamento estiver correto senha "a fazer"
-        public ContaCorrente(string agencia, float saldo, string tipoConta, float renda)
+        public ContaCorrente(string agencia, float saldo, string tipoConta, float renda, Pessoa pessoa)
         {
             _limite = CalcularLimite(renda);
             _habilitada = false;
@@ -35,6 +36,7 @@ namespace Banco_Morangao
             _cartao = new Cartao(_limite, "10");
             _tipoConta = tipoConta;
             _contaPoupanca = new ContaPoupanca();
+            _pessoa = pessoa;
         }
 
         protected float CalcularLimite(float renda)
@@ -87,7 +89,12 @@ namespace Banco_Morangao
 
         public void setHabilitado(bool valor)
         {
-            _habilitada = valor;    
+            _habilitada = valor;
+        }
+
+        public String getNome()
+        {
+            return _pessoa.getNome();
         }
 
         //metodo toString

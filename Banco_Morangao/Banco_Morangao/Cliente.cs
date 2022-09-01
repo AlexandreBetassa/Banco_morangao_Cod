@@ -10,7 +10,6 @@ namespace Banco_Morangao
 {
     internal class Cliente
     {
-        private string _habilitado;
         private Pessoa _pessoa;
         private bool _estudante;
         private string _renda;
@@ -18,9 +17,8 @@ namespace Banco_Morangao
 
         public Cliente() { }
 
-        public Cliente(string habilitado, Pessoa pessoa, bool estudante, string renda, ContaCorrente conta)
+        public Cliente(Pessoa pessoa, bool estudante, string renda, ContaCorrente conta)
         {
-            _habilitado = habilitado;
             _pessoa = pessoa;
             _estudante = estudante;
             _renda = renda;
@@ -33,15 +31,10 @@ namespace Banco_Morangao
             return float.Parse(_renda);
         }
 
-        public void setHabilitarCliente(String valor)
-        {
-            _habilitado = valor;
-        }
-
         public override string ToString()
         {
             //adicionar numero de conta no toString()
-            return $"\nCLIENTE\nStatus do cliente: {_habilitado}\n{_pessoa}\nEstudante: {_estudante}\nRenda: {_renda}\n".ToString();
+            return $"\nCLIENTE\n{_pessoa}\nEstudante: {_estudante}\nRenda: {_renda}\n".ToString();
         }
     }
 }
