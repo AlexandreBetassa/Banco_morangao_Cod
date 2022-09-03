@@ -8,13 +8,12 @@ namespace Banco_Morangao
 {
     internal class Pessoa
     {
-        private String Nome { get; set; }
-        private String Telefone { get; set; }
-
-        private Endereco endereco;
-        private String Email { get; set; } 
-        private String Cpf { get; set; }
-        private String Genero { get; set; }
+        private String _nome;
+        private String _telefone;
+        public Endereco _endereco;
+        private String _email;
+        private String _cpf;
+        private String _genero;
 
         //metodo construtor vazio
         public Pessoa() { }
@@ -22,18 +21,23 @@ namespace Banco_Morangao
         //metodo construtor com parametros
         public Pessoa(string nome, string telefone, Endereco endereco, string email, string cpf, string genero)
         {
-            Nome = nome;
-            Telefone = telefone;
-            this.endereco = endereco;
-            Email = email;
-            Cpf = cpf;
-            Genero = genero;
+            _nome = nome;
+            _telefone = telefone;
+            this._endereco = endereco;
+            _email = email;
+            _cpf = cpf;
+            _genero = genero;
+        }
+
+        public String getNome()
+        {
+            return _nome;
         }
 
         //metodo override
         public override string ToString()
         {
-            return $"Nome: {Nome}\nTelefone: {Telefone}\nEndereço: {endereco}\nE-mail: {Email}\nCPF: {Cpf}\nGênero: {Genero}".ToString();
+            return $"Nome: {_nome}\nTelefone: {_telefone}\nEndereço: {_endereco}\nE-mail: {_email}\nCPF: {_cpf}\nGênero: {_genero}".ToString();
         }
 
     }
