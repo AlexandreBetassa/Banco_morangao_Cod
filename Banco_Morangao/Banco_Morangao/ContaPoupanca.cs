@@ -9,7 +9,6 @@ namespace Banco_Morangao
     internal class ContaPoupanca : ContaCorrente
     {
         private float _saldo;
-        private List<String> _extrato = new List<String>();
 
         public ContaPoupanca() : base()
         {

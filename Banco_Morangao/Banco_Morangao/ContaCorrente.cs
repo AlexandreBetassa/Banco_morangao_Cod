@@ -49,11 +49,34 @@ namespace Banco_Morangao
         }
 
         //metodo para movimentar saida de saldo da conta
-        public void MovimentarSaida(string conta, string operacao, float valor)
+        public bool MovimentarSaida(string conta, string operacao, float valor)
         {
-            if (conta == "CC") _saldo -= valor;
-            else _contaPoupanca._saldo -= valor;
-            _extrato.Add($"Conta: {conta}\tSaida: -{valor}\tOperação: {operacao}\tData: {DateTime.Now.ToShortDateString()}");
+            if (conta == "CC")
+                if (valor > _saldo + _limite)
+                {
+                    Console.WriteLine("Você não possui saldo em sua conta");
+                    return false;
+                }
+                else
+                {
+                    _saldo -= valor;
+                    _extrato.Add($"Conta: {conta}\tSaida: -{valor}\tOperação: {operacao}\tData: {DateTime.Now.ToShortDateString()}");
+                    return true;
+                }
+            else
+            {
+                if (_contaPoupanca._saldo <= 0 || _contaPoupanca._saldo < valor)
+                {
+                    Console.WriteLine("Você não possui saldo em sua conta poupança");
+                    return false;
+                }
+                else
+                {
+                    _contaPoupanca._saldo -= valor;
+                    _extrato.Add($"Conta: {conta}\tSaida: -{valor}\tOperação: {operacao}\tData: {DateTime.Now.ToShortDateString()}");
+                    return true;
+                }
+            }
         }
 
         //metodo para movimentar saida de saldo da conta
@@ -61,13 +84,13 @@ namespace Banco_Morangao
         {
             if (conta == "CC") _saldo += valor;
             else _contaPoupanca._saldo += valor;
-            _extrato.Add($"Conta: {conta}\tSaida: +{valor}\tOperação: {operacao}\tData: {DateTime.Now.ToShortDateString()}");
+            _extrato.Add($"Conta: {conta}\tEntrada: +{valor}\tOperação: {operacao}\tData: {DateTime.Now.ToShortDateString()}");
         }
 
         //metodo para retorno de saldo + limite
-        public float getSaldo()
+        public void getSaldoToString()
         {
-            return _saldo + _limite;
+            Console.WriteLine($"Saldo Cc: {_saldo.ToString("F")}\nSaldo Cc + Limite: {_saldo + _limite.ToString("F")}\nSaldo Poupança: {_contaPoupanca._saldo.ToString("F")}");
         }
 
         //metodo para puxa extrato
@@ -139,6 +162,11 @@ namespace Banco_Morangao
         public String getConta()
         {
             return $"{_pessoa};{_habilitada};{_agencia};{_senha};{_numConta};{_saldo};{_limite};{_cartao.getNumeroCartao()};{_tipoConta}";
+        }
+
+        public float getSaldoPoupança()
+        {
+            return _contaPoupanca._saldo;
         }
 
         public void HabilitarCartao(bool estado)

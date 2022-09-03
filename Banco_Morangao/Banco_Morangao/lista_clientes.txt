@@ -1,6 +1,6 @@
 Nome: 1
 Telefone: 1
-Endereço: 1, n°: 1, Bairro: 1, Cidade: 1, CEP: 1, Complemento: 1
+Endereço: RUA, n°: 1, Bairro: 1, Cidade: 1, CEP: 1, Complemento: 1
 E-mail: 
-CPF: 11111111111
-Gênero: 1;True;1;1;9393;0;0,3;10967;1
+CPF: 12345678912
+Gênero: MASC;True;1;1;3069;0;0,3;76316;1
