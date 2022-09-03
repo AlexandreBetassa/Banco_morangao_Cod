@@ -18,6 +18,7 @@ namespace Banco_Morangao
         private Cartao _cartao;
         private String _tipoConta;
         private ContaPoupanca _contaPoupanca;
+        private float _valorSolicitacaoEmprestimo;
         private List<String> _extrato = new List<String>();
 
         Random r = new Random();
@@ -40,6 +41,7 @@ namespace Banco_Morangao
             _senha = senha;
         }
 
+        //metodo para calcular limite
         protected float CalcularLimite(float renda)
         {
             float limite = renda * (float)0.3;
@@ -47,23 +49,25 @@ namespace Banco_Morangao
         }
 
         //metodo para movimentar saida de saldo da conta
-        public void MovimentarSaida(string operacao, float valor)
+        public void MovimentarSaida(string conta, string operacao, float valor)
         {
-            _saldo -= valor;
-            _extrato.Add($"Saida: -{valor}\tOperação: {operacao}\tData: {DateTime.Now.ToShortDateString()}");
+            if (conta == "CC") _saldo -= valor;
+            else _contaPoupanca._saldo -= valor;
+            _extrato.Add($"Conta: {conta}\tSaida: -{valor}\tOperação: {operacao}\tData: {DateTime.Now.ToShortDateString()}");
         }
 
         //metodo para movimentar saida de saldo da conta
-        public void MovimentarEntrada(string operacao, float valor)
+        public void MovimentarEntrada(string conta, string operacao, float valor)
         {
-            _saldo += valor;
-            _extrato.Add($"Deposito: + {valor}\tOperação: {operacao}\tData: {DateTime.Now.ToShortDateString()}");
+            if (conta == "CC") _saldo += valor;
+            else _contaPoupanca._saldo += valor;
+            _extrato.Add($"Conta: {conta}\tSaida: +{valor}\tOperação: {operacao}\tData: {DateTime.Now.ToShortDateString()}");
         }
 
-        //metodo para retorno de saldo
+        //metodo para retorno de saldo + limite
         public float getSaldo()
         {
-            return _saldo;
+            return _saldo + _limite;
         }
 
         //metodo para puxa extrato
@@ -77,40 +81,69 @@ namespace Banco_Morangao
             Console.ReadKey();
         }
 
+        //metodo para retornar agencia
         public String getAgencia()
         {
             return _agencia;
         }
 
+        //metodo para retornar numero da conta
         public String getNumConta()
         {
             return _numConta;
 
         }
 
+        //metodo para aprovar conta
         public void setHabilitado(bool valor)
         {
             _habilitada = valor;
         }
 
+        //metodo para retornar nome
         public String getNome()
         {
             return _pessoa.getNome();
         }
 
+        //metodo para retornar senha
         public String getSenha()
         {
             return _senha;
         }
 
+        //metodo para retornar tipo de conta
         public String getTipoConta()
         {
             return _tipoConta;
         }
 
+        //metodo para inserir debito de emprestimo no extrato
         public void setExtrato(string operacao, float valor)
         {
             _extrato.Add($"Saida: -{valor}\tOperação: {operacao}\tData: {DateTime.Now.ToShortDateString()}");
+        }
+
+        //metodo para adicionar valor na solicitacao de emprestimo
+        public void setValorEmprestimo(float valor)
+        {
+            _valorSolicitacaoEmprestimo = valor;
+        }
+
+        //metodo para buscar solicitacao de emprestimo
+        public float getValorSolicitacaoEmprestimo()
+        {
+            return _valorSolicitacaoEmprestimo;
+        }
+
+        public String getConta()
+        {
+            return $"{_pessoa};{_habilitada};{_agencia};{_senha};{_numConta};{_saldo};{_limite};{_cartao.getNumeroCartao()};{_tipoConta}";
+        }
+
+        public void HabilitarCartao(bool estado)
+        {
+            _cartao.setCartao(estado);
         }
 
         //metodo toString

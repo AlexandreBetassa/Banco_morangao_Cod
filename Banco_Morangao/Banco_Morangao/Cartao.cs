@@ -23,7 +23,6 @@ namespace Banco_Morangao
         public Cartao(float limite, String datVencFatura)
         {
             _habilitarCartao = false;
-            //_senha = senha;
             _limite = limite;
             _saldo = limite;
             _numCartao = r.Next(10000, 99999).ToString();
@@ -36,6 +35,11 @@ namespace Banco_Morangao
         public void setCartao(bool estado)
         {
             _habilitarCartao = estado;
+        }
+
+        public string getNumeroCartao()
+        {
+            return _numCartao;
         }
 
         //metodo ToString
