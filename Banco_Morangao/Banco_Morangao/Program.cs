@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Globalization;
-using System.Net.Http.Headers;
-using System.Runtime.Intrinsics.X86;
-using System.Security.Cryptography.X509Certificates;
-using System.Text.RegularExpressions;
 
 namespace Banco_Morangao
 {
@@ -122,7 +115,7 @@ namespace Banco_Morangao
             {
                 do
                 {
-                    Console.Write("Informe a operação:\n1 - Sacar / 2 - Depositar / 3 - Pagar / 4 - Solicitar empréstimo / 5 - Consultas / 6 - Transferir\n>");
+                    Console.Write("Informe a operação:\n1 - Sacar / 2 - Depositar / 3 - Pagar / 4 - Solicitar empréstimo / 5 - Consultas / 6 - Transferir / 7 - Serviços Cartão\n>");
                     op = ColetarValorInt();
                 } while (op < 1 && op > 7);
                 Console.Clear();
@@ -153,8 +146,8 @@ namespace Banco_Morangao
                         Tranferir(conta);
                         break;
                     case 7:
-                        Console.WriteLine("### BLOQUEAR OU DESBLOQUEAR CARTÃO ###");
-                        BloquearDesbloquearCartao(conta);
+                        Console.WriteLine("### SERVIÇOS CARTÃO ###");
+                        ServicosCartao(conta);
                         break;
                 }
                 Console.WriteLine("### MENU CONTA ###");
@@ -400,26 +393,59 @@ namespace Banco_Morangao
             do
             {
                 confirmar = ColetarValorInt();
-                if (confirmar < 0 || confirmar > 2) Console.WriteLine("Informe uma operação correta");
-            } while (confirmar < 0 || confirmar > 2);
+                if (confirmar < 0 || confirmar > 3) Console.WriteLine("Informe uma operação correta");
+            } while (confirmar < 0 || confirmar > 3);
 
             if (confirmar == 1)
             {
                 conta.HabilitarCartao(true);
-                Console.WriteLine("Cartão Bloqueado");
+                conta.StatusCartao();
                 Pause();
             }
             else if (confirmar == 2)
             {
                 conta.HabilitarCartao(false);
-                Console.WriteLine("Cartão Desbloqueado");
+                conta.StatusCartao();
                 Pause();
             }
             else
             {
-                Console.WriteLine("Operação cancelada");
-                Pause();
+                OperacaoCancelada();
+                return;
             }
+            Pause();
+        }
+
+        static void ServicosCartao(ContaCorrente conta)
+        {
+            int op;
+            Console.Write("0 - Cancelar / 1 - Bloquear/Desbloquear cartão / 2 - Consultar saldo cartão? / 3 - Consultar status do cartão: ");
+            do
+            {
+                op = ColetarValorInt();
+            } while (op < 0 || op > 3);
+
+            switch (op)
+            {
+                case 1:
+                    BloquearDesbloquearCartao(conta);
+                    break;
+                case 2:
+                    ConsultarSaldoCartao(conta);
+                    break;
+                case 3:
+                    conta.StatusCartao();
+                    break;
+                case 0:
+                    OperacaoCancelada();
+                    break;
+            }
+        }
+
+        static void ConsultarSaldoCartao(ContaCorrente conta)
+        {
+            Console.WriteLine($"Saldo cartão: {conta.SaldoCartao().ToString("F")}");
+            Pause();
         }
 
         #endregion Cliente
@@ -580,11 +606,10 @@ namespace Banco_Morangao
             else AprovacaoEmprestimo();
         }
 
-        //metodo para aprovacao de abertura de contas
+        //metodo para aprovacao de abertura de contas (BUG - EM CORREÇÃO)
         static void AprovacaoAberturaDeContas()
         {
             int op;
-            agencia.BuscarAprovacoesContas();
             do
             {
                 Cliente cliente = agencia.BuscarAprovacoesContas();
@@ -608,8 +633,11 @@ namespace Banco_Morangao
                         agencia.DelListaAprovacao(cliente);
                     }
                 }
-                Console.Clear();
-                Console.WriteLine("### MENU APROVAÇÕES ###");
+                else
+                {
+                    Console.WriteLine("Não há clientes a serem aprovados!!!");
+                    break;
+                }
             } while (RepetirOperacao());
             OperacaoCancelada();
         }
@@ -653,7 +681,11 @@ namespace Banco_Morangao
             int op;
             Console.Write("Deseja efetuar nova operação? 1 - SIM / 2 - NÃO: ");
             op = AuxColetarValor1e2();
-            if (op == 1) return true;
+            if (op == 1)
+            {
+                return true;
+                Console.Clear();
+            }
             else return false;
         }
         //metodo para coletar valores int
@@ -695,14 +727,17 @@ namespace Banco_Morangao
             return texto;
         }
 
-        //metodo para verificar tipo de conta
+        //metodo para verificar tipo de conta(BUG de msg - corrigir)
         static bool VerificarContaInformada(string tipoConta)
         {
             if (tipoConta != "VIP" && tipoConta != "UNIVERSITARIA" && tipoConta != "NORMAL")
+            {
+                Console.WriteLine($"Tpo de conta selecionada: {tipoConta}");
                 return true;
+            }
             else
             {
-                Console.WriteLine("Tipo de conta inválida");
+                Console.WriteLine($"Tipo de conta inválida: {tipoConta}");
                 return false;
             }
         }

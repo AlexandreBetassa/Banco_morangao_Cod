@@ -116,8 +116,6 @@ namespace Banco_Morangao
             Console.WriteLine("### EXTRATO ###\n");
             Console.WriteLine($"Conta: {_numConta}\tAgência: {_agencia}\n");
             foreach (var item in _extrato) Console.WriteLine(item);
-            Console.WriteLine("### FIM EXTRATO ###\nPressione ENTER para continuar...");
-            Console.ReadKey();
         }
         #endregion Extrato
 
@@ -149,6 +147,12 @@ namespace Banco_Morangao
         {
             if (_cartao._habilitarCartao == true) return "Habilitado";
             else return "Bloqueado";
+        }
+
+        //metodo para saber saldo cartão
+        public float SaldoCartao()
+        {
+            return _cartao._saldo;
         }
 
         //metodo para habilitar cartao
