@@ -8,22 +8,30 @@ namespace Banco_Morangao
 {
     internal class Funcionario
     {
-        private Pessoa _pessoa { get; set; }
-        private String _id { get; set; }
-        private String _cargo { get; set; }
-        private String _nivelAcesso { get; set; }
+        private Pessoa _pessoa;
+        private String _id;
+        private String _cargo;
+        private int _nivelAcesso;
+        private String _senha;
 
         public Funcionario()
         {
         }
 
-        public Funcionario(Pessoa pessoa, string cargo, string nivelAcesso)
+        public Funcionario(Pessoa pessoa, string cargo, int nivelAcesso, string senha)
         {
             Random r = new Random();
             _pessoa = pessoa;
             _id = r.Next(10000, 999999).ToString();
             _cargo = cargo;
             _nivelAcesso = nivelAcesso;
+            _senha = senha;
+        }
+
+        public bool getSenha(string senha, int nivelAcesso, string id)
+        {
+            if (_senha == senha && _nivelAcesso >= nivelAcesso && _id == id) return true;
+            else return false;
         }
 
         public override string ToString()
