@@ -10,19 +10,33 @@ namespace Banco_Morangao
 {
     internal class Cliente
     {
+        private bool _habilitado;
         private Pessoa _pessoa;
         private String _estudante;
         private string _renda;
-        public ContaCorrente conta;
+        private ContaCorrente _conta;
 
         public Cliente() { }
 
         public Cliente(Pessoa pessoa, String estudante, string renda, ContaCorrente conta)
         {
+            _habilitado = false;
             _pessoa = pessoa;
             _estudante = estudante;
             _renda = renda;
-            this.conta = conta;
+            _conta = conta;
+        }
+
+        //metodo getConta
+        public ContaCorrente getConta()
+        {
+            return _conta;
+        }
+
+        //metodo para aprovar cliente
+        public void HabilitarCliente(bool valor)
+        {
+            _habilitado = valor;
         }
 
         //metodo para coletar a renda do cliente
@@ -31,6 +45,7 @@ namespace Banco_Morangao
             return float.Parse(_renda);
         }
 
+        //metodo toString
         public override string ToString()
         {
             //adicionar numero de conta no toString()

@@ -10,21 +10,41 @@ namespace Banco_Morangao
 {
     internal class Agencia
     {
+        internal protected List<Cliente> _listClientes = new List<Cliente>();
         private List<Funcionario> _listFuncionario = new List<Funcionario>();
         private List<ContaCorrente> _listContaCorrente = new List<ContaCorrente>();
         private List<Cliente> _listAprovacoesCliente = new List<Cliente>();
         private List<ContaCorrente> _listAprovacoesEmprestimo = new List<ContaCorrente>();
 
         #region metodos da agencia
+        public void setListCliente(Cliente cliente)
+        {
+            _listClientes.Add(cliente);
+        }
+
+        public void removeListCliente(Cliente cliente)
+        {
+            _listClientes.Remove(cliente);
+
+        }
 
         #region metodos acesso funcionario
         //metodo para listagem de funcionarios
-
         public void getListFuncionarios()
         {
             foreach (var item in _listFuncionario)
-                if (item != null) Console.WriteLine($"FUNCIONÁRIO: {_listFuncionario.IndexOf(item)}\n{item}\n");
-                else Console.WriteLine("Não há clientes a serem listados");
+                if (item != null) Console.WriteLine($"FUNCIONÁRIO: {_listFuncionario}\n{item}\n");
+                else Console.WriteLine("Não há funcionário a serem listados");
+        }
+
+        //metodo de verificacao de acesso de funcionario
+        public bool BuscarFucionario(string senha, int nivelAcesso, string id)
+        {
+            foreach (var item in _listFuncionario)
+            {
+                if (item != null) if (item.getSenha(senha, nivelAcesso, id)) return true;
+            }
+            return false;
         }
 
         //metodo para adicionar funcionario na lista
@@ -62,7 +82,7 @@ namespace Banco_Morangao
         //buscar conta de usuário
         public ContaCorrente BuscarContaCorrente(string agencia, string numConta)
         {
-            foreach (ContaCorrente conta in _listContaCorrente) if (conta.getAgencia() == agencia && conta.getNumConta() == numConta) return conta;
+            foreach (ContaCorrente conta in _listContaCorrente) if (conta._agencia == agencia && conta._numConta == numConta) return conta;
             Console.WriteLine("Usúario não encontrado");
             return null;
         }
@@ -118,52 +138,5 @@ namespace Banco_Morangao
         #endregion metodos lista aprovação
 
         #endregion metodos da agencia
-
-        #region Impressao
-        public void Gravar_Arquivo(Agencia agencia)
-        {
-            Console.WriteLine("Iniciando a Gravação de Dados...");
-            try
-            {
-                StreamWriter listaClientes = new StreamWriter("C:\\Users\\Alexandre\\Desktop\\Aulas\\Banco Morangao\\Código banco morangao\\Banco_Morangao\\Banco_Morangao\\lista_clientes.txt");  //Instancia um Objeto StreamWriter (Classe de Manipulação de Arquivos)
-                foreach (var item in agencia._listContaCorrente) listaClientes.WriteLine(item.getConta() + "");
-                listaClientes.Close();  // Comando para Fechar o Arquivo
-
-            }
-            catch (Exception e)
-            {
-                {
-                    Console.WriteLine("Exception: " + e.Message);
-                }
-                Console.WriteLine("FIM DA GRAVAÇÃO");
-            }
-        }
-        public void LerArquivosListas()
-        {
-            try
-            {
-                string line;
-                StreamReader sr = new StreamReader("C:\\Users\\Alexandre\\Desktop\\Aulas\\Banco Morangao\\Código banco morangao\\Banco_Morangao\\Banco_Morangao\\lista_clientes.txt");//Instancia um Objeto StreamReader (Classe de Manipulação de Leitura de Arquivos)
-                line = sr.ReadLine(); //Faz a Leitura de uma linha do arquivo e atribui a string line
-                while (line != null)// Laço de Repetição para fazer a leitura de linhas do arquivo até o EOF (End Of File - Fim do Arquivo)
-                {
-                    Console.WriteLine(line);//Imprime o retorno do arquivo no Console
-                    line = sr.ReadLine(); //Faz a Leitura de linha do arquivo e atribui a string line
-                }
-                sr.Close();//Fecha o Arquivo
-                Console.WriteLine("Fim da Leitura do Arquivo");
-                Console.ReadLine();
-            }
-            catch (Exception)
-            {
-
-            }
-        }
-        public String getConta(ContaCorrente conta)
-        {
-            return conta.getConta();
-        }
-        #endregion Impressao
-
     }
 }

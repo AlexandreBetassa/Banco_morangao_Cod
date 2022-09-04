@@ -8,12 +8,12 @@ namespace Banco_Morangao
 {
     internal class Pessoa
     {
-        private String _nome;
-        private String _telefone;
-        public Endereco _endereco;
-        private String _email;
-        private String _cpf;
-        private String _genero;
+        internal protected String _nome;
+        protected String _telefone;
+        protected Endereco _endereco;
+        protected String _email;
+        protected String _cpf;
+        protected String _genero;
 
         //metodo construtor vazio
         public Pessoa() { }
@@ -23,12 +23,13 @@ namespace Banco_Morangao
         {
             _nome = nome;
             _telefone = telefone;
-            this._endereco = endereco;
+            _endereco = endereco;
             _email = email;
             _cpf = cpf;
             _genero = genero;
         }
 
+        //metodo para coletar nome
         public String getNome()
         {
             return _nome;

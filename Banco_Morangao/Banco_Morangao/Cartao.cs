@@ -8,14 +8,14 @@ namespace Banco_Morangao
 {
     internal class Cartao
     {
-        private bool _habilitarCartao;
-        private String _senha;
-        private float _limite;
-        private float _saldo;
-        private String _numCartao;
-        private String _digVerificador;
-        private String _dataVencFatura;
-        private DateTime _validadeCartao;
+        internal protected bool _habilitarCartao;
+        internal protected String _senha;
+        internal protected float _limite;
+        internal protected float _saldo;
+        internal protected String _numCartao;
+        internal protected String _digVerificador;
+        internal protected String _dataVencFatura;
+        internal protected DateTime _validadeCartao;
 
         Random r = new Random();
 
@@ -40,6 +40,11 @@ namespace Banco_Morangao
         public string getNumeroCartao()
         {
             return _numCartao;
+        }
+
+        public void StatusCartao()
+        {
+
         }
 
         //metodo ToString
