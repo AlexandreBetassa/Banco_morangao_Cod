@@ -49,7 +49,7 @@ namespace Banco_Morangao
         public override string ToString()
         {
             //adicionar numero de conta no toString()
-            return $"\nCLIENTE\n{_pessoa}\nEstudante: {_estudante}\nRenda: {_renda}\n".ToString();
+            return $"\nCLIENTE\n{_pessoa}\nEstudante: {_estudante}\nRenda: {_renda}\nNúmero conta: {_conta._numConta}\nAgência: {_conta._agencia}".ToString();
         }
     }
 }

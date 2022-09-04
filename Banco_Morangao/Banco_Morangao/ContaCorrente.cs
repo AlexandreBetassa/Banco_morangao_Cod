@@ -89,7 +89,7 @@ namespace Banco_Morangao
         //metodo para retorno de saldo + limite
         public void getSaldoToString()
         {
-            Console.WriteLine($"Saldo Cc: {_saldo.ToString("F")}\nSaldo Cc + Limite: {(_saldo + _limite).ToString("F")}\nSaldo Poupança: {_contaPoupanca._saldo.ToString("F")}");
+            Console.WriteLine($"Nome titular: {_pessoa._nome}\tAgência: {_agencia}\tConta: {_numConta}\nSaldo Cc: {_saldo.ToString("F")}\nSaldo Cc + Limite: {(_saldo + _limite).ToString("F")}\nSaldo Poupança: {_contaPoupanca._saldo.ToString("F")}");
         }
 
         //metodo para retornar senha
@@ -166,7 +166,7 @@ namespace Banco_Morangao
         //metodo toString
         public override string ToString()
         {
-            return $"Agência: {_agencia}\nNúmero conta: {_numConta}\nSaldo: {_saldo.ToString("F")}\nLimite: {_limite.ToString("F")}\nTipo de conta: {_tipoConta}\nCONTA POUPANÇA\nSaldo: {_contaPoupanca}\n\nCARTÃO\n{_cartao}".ToString();
+            return $"Agência: {_agencia}\nNúmero conta: {_numConta}\nTipo de conta: {_tipoConta}\nCARTÃO\n{_cartao}".ToString();
         }
 
     }

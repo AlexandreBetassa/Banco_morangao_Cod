@@ -150,6 +150,7 @@ namespace Banco_Morangao
                         ServicosCartao(conta);
                         break;
                 }
+                Console.Clear();
                 Console.WriteLine("### MENU CONTA ###");
             } while (RepetirOperacao());
         }
@@ -192,6 +193,7 @@ namespace Banco_Morangao
                         break;
                 }
                 Console.WriteLine("### MENU FUNCIONÁRIO ###");
+                Console.Clear();
             } while (RepetirOperacao());
         }
 
@@ -250,11 +252,13 @@ namespace Banco_Morangao
             else if (op == 2)
             {
                 ContaCorrente contaDestino = ContaDestino();
+                Console.Write("Informe o valor a ser transferido: ");
                 valor = ColetarValorFloat();
                 conta.MovimentarSaida("CC", "Transferência", valor);
                 contaDestino.MovimentarEntrada("CC", "Transferência", valor);
-                Console.WriteLine($"\nSaldo conta titular");
+                Console.WriteLine($"\n### TITULAR ###");
                 conta.getSaldoToString();
+                Console.WriteLine($"\n### DESTINO ###");
                 Console.WriteLine($"\nSaldo conta destino");
                 contaDestino.getSaldoToString();
                 Pause();
@@ -316,7 +320,7 @@ namespace Banco_Morangao
         static void Consultar(ContaCorrente conta)
         {
             int op;
-            Console.Write("O que deseja consultar: 1 - Saldo / 2 - Extrato");
+            Console.Write("O que deseja consultar: 1 - Saldo / 2 - Extrato: ");
             op = ColetarValorInt();
             if (op == 1)
             {
@@ -455,6 +459,8 @@ namespace Banco_Morangao
         //metodo para coletar endereco
         static Endereco ColetarEndereco()
         {
+            Console.WriteLine("INFORME O ENDEREÇO");
+
             string logradouro, bairro, cidade, cep, complemento, numero;
 
             Console.Write("Informe o logradouro com rua ou avenida: ");
@@ -472,15 +478,15 @@ namespace Banco_Morangao
             Console.Write("Informe o CEP: ");
             cep = ColetarString();
 
-            Console.Write("Informe o complemento: ");
+            Console.Write("Informe o complemento (Caso necessário): ");
             complemento = Console.ReadLine();
-
             return new Endereco(logradouro, numero, bairro, cidade, cep, complemento);
         }
 
         //metodo coletar dados pessoa
         static Pessoa ColetarPessoa()
         {
+            Console.WriteLine("### INFORME OS DADOS DA PESSOA ###");
             string nome, telefone, email, cpf, genero;
             Endereco endereco;
 
@@ -500,13 +506,12 @@ namespace Banco_Morangao
             email = Console.ReadLine();
 
             Console.Write("Informe o sexo da pessoa (Masc)(Fem): ");
-            do genero = ColetarString();
-            while (genero != "MASC" && genero != "FEM");
-            Console.Clear();
-
-            Console.WriteLine("INFORME O ENDEREÇO");
+            do
+            {
+                genero = ColetarString();
+                if (genero != "MASC" && genero != "FEM") Console.WriteLine("Informe somente Masc ou Fem");
+            } while (genero != "MASC" && genero != "FEM");
             endereco = ColetarEndereco();
-
             return new Pessoa(nome, telefone, endereco, email, cpf, genero);
         }
 
@@ -526,11 +531,16 @@ namespace Banco_Morangao
             Console.Write("Informe a renda: ");
             renda = ColetarValorFloat();
             pessoa = ColetarPessoa();
+            Console.Clear();
             conta = CriarContaCorrente(renda, pessoa);
+            Console.Clear();
 
             Cliente cliente = new Cliente(pessoa, Estudante(estudante), renda.ToString(), conta);
-            Console.Write($"\n{cliente}\n\n{cliente.getConta()}");
             agencia.setListaAprovacaoContas(cliente);
+            Console.Clear();
+            Console.Write($"\n{cliente}\n\n{cliente.getConta()}");
+            Console.WriteLine("Aguarde aprovação do gerente\n\n");
+            Pause();
         }
 
         //metodo para verificaçao se é estudante
@@ -545,20 +555,19 @@ namespace Banco_Morangao
         {
             String agencia, tipoConta, senha;
             float saldoInicial;
-
-            Console.WriteLine("INFORME OS DADOS DA CONTA");
-            Console.Write("Informe o numero da agência: ");
+            Console.WriteLine("#### INFORME OS DADOS DA CONTA ###");
+            Console.Write("Informe o número da agência: ");
             agencia = ColetarString();
             do
             {
-                Console.Write("Informe o tipo de conta: ");
+                Console.Write("Informe o tipo de conta Normal / Universitaria / Vip: ");
                 tipoConta = ColetarString();
-            } while (VerificarContaInformada(tipoConta));
+                if (VerificarContaInformada(tipoConta)) Console.WriteLine("Informe somente uma das opções: Normal / Universitaria / Vip");
+            } while (VerificarContaInformada(tipoConta) == false);
             Console.Write("Terá deposito inicial? Informe o valor. Caso não houver pressione ENTER: ");
             float.TryParse(Console.ReadLine(), out saldoInicial);
             Console.Write("Informe uma senha para sua conta: Pode incluir numeros, simbolos e digitos numéricos: ");
             senha = ColetarString();
-            Console.Clear();
             return new ContaCorrente(agencia, saldoInicial, tipoConta, renda, pessoa, senha);
         }
 
@@ -577,7 +586,7 @@ namespace Banco_Morangao
 
             Console.WriteLine("### CADASTRO DE FUNCIONÁRIO ###");
             pessoa = ColetarPessoa();
-
+            Console.Clear();
             Console.Write("Informe o cargo do funcionário: ");
             cargo = ColetarString();
 
@@ -592,9 +601,10 @@ namespace Banco_Morangao
             senha = ColetarString();
 
             Funcionario funcionario = new Funcionario(pessoa, cargo, nivelAcesso, senha);
-            Console.WriteLine(funcionario);
-            Pause();
             agencia.setFuncList(funcionario);
+            Console.Clear();
+            Console.WriteLine("### CADASTRADO COM SUCESSO ###\n\n" + funcionario);
+            Pause();
         }
 
         //finalizar aprovações de emprestimo
@@ -638,8 +648,8 @@ namespace Banco_Morangao
                     Console.WriteLine("Não há clientes a serem aprovados!!!");
                     break;
                 }
+                Console.WriteLine("#### APROVAÇÃO DE CONTAS ###");
             } while (RepetirOperacao());
-            OperacaoCancelada();
         }
 
         //metodo para aprovação de emprestimos
@@ -658,14 +668,12 @@ namespace Banco_Morangao
                     conta.setValorEmprestimo(0);
                     Console.WriteLine("Aprovado");
                     agencia.DelSolicitacaoEmprestimo(conta);
-                    Pause();
                 }
                 else
                 {
                     Console.WriteLine("Empréstimo reprovado");
                     agencia.DelSolicitacaoEmprestimo(conta);
                     conta.setValorEmprestimo(0);
-                    Pause();
                 }
             }
 
@@ -683,10 +691,15 @@ namespace Banco_Morangao
             op = AuxColetarValor1e2();
             if (op == 1)
             {
-                return true;
                 Console.Clear();
+                return true;
             }
-            else return false;
+
+            else
+            {
+                Console.Clear();
+                return false;
+            }
         }
         //metodo para coletar valores int
         static int ColetarValorInt()
@@ -727,19 +740,15 @@ namespace Banco_Morangao
             return texto;
         }
 
-        //metodo para verificar tipo de conta(BUG de msg - corrigir)
+        //metodo para verificar tipo de conta
         static bool VerificarContaInformada(string tipoConta)
         {
-            if (tipoConta != "VIP" && tipoConta != "UNIVERSITARIA" && tipoConta != "NORMAL")
+            if (tipoConta == "VIP" || tipoConta == "UNIVERSITARIA" || tipoConta == "NORMAL")
             {
                 Console.WriteLine($"Tpo de conta selecionada: {tipoConta}");
                 return true;
             }
-            else
-            {
-                Console.WriteLine($"Tipo de conta inválida: {tipoConta}");
-                return false;
-            }
+            else return false;
         }
 
         static bool VerificarCpf(String Cpf)
