@@ -16,6 +16,11 @@ namespace Banco_Morangao
 
         public Funcionario()
         {
+            _pessoa = new Pessoa();
+            _id = "0";
+            _cargo = "GERENTE";
+            _nivelAcesso = 2;
+            _senha = "0";
         }
 
         public Funcionario(Pessoa pessoa, string cargo, int nivelAcesso, string senha)

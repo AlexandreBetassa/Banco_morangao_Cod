@@ -74,7 +74,11 @@ namespace Banco_Morangao
         {
             foreach (var item in _listContaCorrente)
             {
-                if (item != null) Console.WriteLine(item + "\n");
+                if (item != null)
+                {
+                    Console.WriteLine(item + "\n");
+                    Console.ReadKey();
+                }
                 else Console.WriteLine("Não há contas cadastradas");
             }
         }
@@ -95,7 +99,6 @@ namespace Banco_Morangao
         public Cliente BuscarAprovacoesContas()
         {
             foreach (var item in _listAprovacoesCliente) if (item != null) return item;
-            Console.WriteLine("Não há novas aprovações a serem realizadas");
             return null;
         }
         //metodo para adicionar contas para aprovação
