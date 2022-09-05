@@ -89,7 +89,7 @@ namespace Banco_Morangao
         //metodo para retorno de saldo + limite
         public void getSaldoToString()
         {
-            Console.WriteLine($"Nome titular: {_pessoa._nome}\tAgência: {_agencia}\tConta: {_numConta}\nSaldo Cc: {_saldo.ToString("F")}\nSaldo Cc + Limite: {(_saldo + _limite).ToString("F")}\nSaldo Poupança: {_contaPoupanca._saldo.ToString("F")}");
+            Console.WriteLine($"Nome titular: {_pessoa._nome}\tAgência: {_agencia}\tConta: {_numConta}\nSaldo Cc: {_saldo.ToString("F")}\nSaldo Cc + Limite: {(_saldo + _limite).ToString("F")}\nSaldo Poupança: {_contaPoupanca._saldo.ToString("F")}\n");
         }
 
         //metodo para retornar senha
@@ -103,18 +103,10 @@ namespace Banco_Morangao
         }
 
         #region Extrato
-        //metodo para inserir debito de emprestimo no extrato
-        public void setExtrato(string operacao, float valor)
-        {
-            _extrato.Add($"Saida: -{valor}\tOperação: {operacao}\tData: {DateTime.Now.ToShortDateString()}");
-        }
-
         //metodo para puxa extrato
         public void getExtrato()
         {
-            Console.Clear();
-            Console.WriteLine("### EXTRATO ###\n");
-            Console.WriteLine($"Conta: {_numConta}\tAgência: {_agencia}\n");
+            Console.WriteLine("\n### EXTRATO ###");
             foreach (var item in _extrato) Console.WriteLine(item);
         }
         #endregion Extrato
