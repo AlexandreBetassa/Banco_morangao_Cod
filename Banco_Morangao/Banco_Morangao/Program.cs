@@ -6,7 +6,6 @@ namespace Banco_Morangao
     {
         static Agencia agencia = new Agencia();
 
-
         static void Main(string[] args)
         {
             agencia.setFuncList(new Funcionario());

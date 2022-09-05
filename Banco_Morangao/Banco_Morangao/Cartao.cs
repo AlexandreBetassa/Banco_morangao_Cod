@@ -19,16 +19,15 @@ namespace Banco_Morangao
 
         Random r = new Random();
 
-        //criar a senha após estiver funcionando "a fazer"
         public Cartao(float limite, String datVencFatura)
         {
             _habilitarCartao = false;
             _limite = limite;
             _saldo = limite;
             _numCartao = r.Next(10000, 99999).ToString();
-            //_digVerificador = "criar metodo";
+            _digVerificador = "0";
             _dataVencFatura = datVencFatura;
-            _validadeCartao = DateTime.Now; //somar mais 5 anos "a fazer"
+            _validadeCartao = DateTime.Now; 
         }
 
         //metodo para desbloquear cartão

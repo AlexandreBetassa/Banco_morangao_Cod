@@ -152,14 +152,11 @@ namespace Banco_Morangao
         {
             _cartao.setCartao(estado);
         }
-
         #endregion Cartao
-
         //metodo toString
         public override string ToString()
         {
             return $"Agência: {_agencia}\nNúmero conta: {_numConta}\nTipo de conta: {_tipoConta}\nCARTÃO\n{_cartao}".ToString();
         }
-
     }
 }
