@@ -10,30 +10,45 @@ namespace Banco_Morangao
         static void Main(string[] args)
         {
             agencia.setFuncList(new Funcionario());
+            Inicio();
             do
             {
+                int op = MenuSistema();
                 Console.Clear();
-                if (MenuSistema() == 1)
+                switch (op)
                 {
-                    Console.Clear();
-                    Console.WriteLine("### MENU CLIENTE ###");
-                    if (agencia._listClientes.Capacity != 0) MenuCliente();
-                    else Console.WriteLine("Ainda não há clientes cadastrados");
+                    case 0:
+                        Inicio();
+                        break;
+                    case 1:
+                        Console.WriteLine("### MENU CLIENTE ###");
+                        if (agencia._listClientes.Capacity != 0) MenuCliente();
+                        else Console.WriteLine("Ainda não há clientes cadastrados");
+                        break;
+                    case 2:
+                        Console.WriteLine("### MENU FUNCIONÁRIO ###");
+                        if (SolicitarSenha(1)) MenuFuncionario();
+                        else
+                        {
+                            Console.WriteLine("Senha Inválida");
+                            Pause();
+                        }
+                        break;
+                    default:
+                        break;
                 }
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine("### MENU FUNCIONÁRIO ###");
-                    if (SolicitarSenha(1)) MenuFuncionario();
-                    else
-                    {
-                        Console.WriteLine("Senha Inválida");
-                        Pause();
-                    }
-                }
-                Console.WriteLine("### MENU SISTEMA ###");
             } while (RepetirOperacao());
             Console.WriteLine("Sair");
+        }
+
+        public static void Inicio()
+        {
+            Console.Clear();
+            Console.WriteLine("\t\t### INFORMAÇÃO IMPORTANTE ###");
+            Console.WriteLine("GUARDE TODOS OS IDs DE CADASTROS E SENHAS QUE FIZER\nPOR PADRÃO EXISTE UM FUNCIONÁRIO GENÉRICO DE NIVEL DE ACESSO 2 CADASTRADO");
+            Console.WriteLine("PARA QUE POSSA EFETUAR AS TRANSAÇÕES DE TESTE: SENHA: 0 / ID DE FUNCIONÁRIO: 0");
+            Console.WriteLine("CASO PREFERIR PODE EFETUAR CADASTROS DE NOVOS FUNCIONÁRIOS E CLIENTES COM ESSE ACESSO GENÉRICO");
+            Pause();
         }
 
         //TESTAR MENUS
@@ -41,7 +56,7 @@ namespace Banco_Morangao
         //Menu
         static int MenuSistema()
         {
-            Console.Write("Você é cliente ou funcionário? 1 - Cliente / 2 - Funcionário: ");
+            Console.Write("Você é cliente ou funcionário? 1 - Cliente / 2 - Funcionário / 0 - Mensagem Inicial: ");
             int op = AuxColetarValor1e2();
             return op;
         }
@@ -779,8 +794,8 @@ namespace Banco_Morangao
             do
             {
                 valor = ColetarValorInt();
-                if (valor != 1 && valor != 2) Console.WriteLine("Informe valor válido");
-            } while (valor != 1 && valor != 2);
+                if (valor < 0 && valor > 2) Console.WriteLine("Informe valor válido");
+            } while (valor < 1 && valor > 2);
             return valor;
         }
 
