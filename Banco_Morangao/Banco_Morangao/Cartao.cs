@@ -27,7 +27,8 @@ namespace Banco_Morangao
             _numCartao = r.Next(10000, 99999).ToString();
             _digVerificador = "0";
             _dataVencFatura = datVencFatura;
-            _validadeCartao = DateTime.Now; 
+            _validadeCartao = DateTime.Now;
+            _validadeCartao = _validadeCartao.AddYears(5);
         }
 
         //metodo para desbloquear cartão
