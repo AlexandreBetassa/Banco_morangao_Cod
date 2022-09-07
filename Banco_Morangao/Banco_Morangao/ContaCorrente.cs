@@ -25,7 +25,7 @@ namespace Banco_Morangao
         //metodo construtor vazio
         public ContaCorrente() { }
 
-        //Construtor
+        //Construtor //com parametros
         public ContaCorrente(string agencia, float saldo, string tipoConta, float renda, Pessoa pessoa, String senha)
         {
             _limite = CalcularLimite(renda);
