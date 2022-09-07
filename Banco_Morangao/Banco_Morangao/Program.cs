@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net.Http.Headers;
+using System.Net.WebSockets;
 
 namespace Banco_Morangao
 {
@@ -9,24 +11,28 @@ namespace Banco_Morangao
         static void Main(string[] args)
         {
             agencia.setFuncList(new Funcionario());
+            Console.WriteLine(agencia);
             Inicio();
             do
             {
                 int op = MenuSistema();
-                Console.Clear();
                 switch (op)
                 {
                     case 0:
+                        Console.Clear();
                         Inicio();
                         break;
                     case 1:
-                        Console.WriteLine("### MENU CLIENTE ###");
-                        if (agencia._listClientes.Capacity != 0) MenuCliente();
+                        Console.WriteLine("\t### MENU CLIENTE ###");
+                        if (agencia._listClientes.Capacity != 0) LoginCliente();
                         else Console.WriteLine("Ainda não há clientes cadastrados");
+                        Pause();
                         break;
                     case 2:
-                        Console.WriteLine("### MENU FUNCIONÁRIO ###");
-                        if (SolicitarSenha(1)) MenuFuncionario();
+                        Console.WriteLine("\t### MENU FUNCIONÁRIO ###");
+                        Funcionario funcionario = LoginFuncionario();
+                        if (funcionario != null)
+                            MenuFuncionario(funcionario);
                         else
                         {
                             Console.WriteLine("Senha Inválida");
@@ -36,13 +42,13 @@ namespace Banco_Morangao
                     default:
                         break;
                 }
+                Console.WriteLine("### MENU SISTEMA ###");
             } while (RepetirOperacao());
             Console.WriteLine("Sair");
         }
 
         public static void Inicio()
         {
-            Console.Clear();
             Console.WriteLine("\t\t### INFORMAÇÃO IMPORTANTE ###");
             Console.WriteLine("GUARDE TODOS OS IDs DE CADASTROS E SENHAS QUE FIZER\nPOR PADRÃO EXISTE UM FUNCIONÁRIO GENÉRICO DE NIVEL DE ACESSO 2 CADASTRADO");
             Console.WriteLine("PARA QUE POSSA EFETUAR AS TRANSAÇÕES DE TESTE: SENHA: 0 / ID DE FUNCIONÁRIO: 0");
@@ -55,6 +61,8 @@ namespace Banco_Morangao
         //Menu
         static int MenuSistema()
         {
+            Console.Clear();
+            Console.WriteLine("### MENU SISTEMA ###");
             Console.Write("Você é cliente ou funcionário? 1 - Cliente / 2 - Funcionário / 0 - Mensagem Inicial: ");
             int op = AuxColetarValor1e2();
             return op;
@@ -80,8 +88,11 @@ namespace Banco_Morangao
         }
 
         //Menu do cliente
-        static void MenuCliente()
+        static void LoginCliente()
         {
+            string senha;
+            Console.Clear();
+            Console.WriteLine("### LOGIN CLIENTE ####");
             ContaCorrente conta = agencia.BuscarContaCorrente(SolicitarAgencia(), SolicitarNumConta());
             if (conta == null)
             {
@@ -90,25 +101,30 @@ namespace Banco_Morangao
             }
             else
             {
-                if (conta.getSenha()) MenuConta(conta);
+                Console.Write($"Por favor {conta._pessoa._nome} informe sua senha para continuar: ");
+                senha = Console.ReadLine();
+                if (conta.getSenha(senha)) MenuConta(conta);
                 else
                 {
-                    Console.WriteLine("SENHA INVÁLIDA");
+                    Console.WriteLine("SENHA INVÁLIDA OU CLIENTE NÃO LOCALIZADO!!!");
                     OperacaoCancelada();
                 }
             }
         }
 
         //solicitar senha
-        static bool SolicitarSenha(int nivelAcesso)
+        static Funcionario LoginFuncionario()
         {
             string senha, id;
-            Console.Write($"Por favor informe sua senha: ");
-            senha = ColetarString();
-            Console.Write($"Por favor informe seu Id: ");
+            Console.Clear();
+            Console.WriteLine("### LOGIN FUNCIONÁRIO ###");
+            Console.Write("Por favor informe seu Id: ");
             id = ColetarString();
-            if (agencia.BuscarFucionario(senha, nivelAcesso, id)) return true;
-            else return false;
+            Console.Write("Por favor informe sua senha: ");
+            senha = ColetarString();
+            Funcionario funcionario = agencia.BuscarFucionario(senha, id);
+            if (funcionario != null) return funcionario;
+            else return null;
         }
 
         //Menu Conta cliente
@@ -117,60 +133,54 @@ namespace Banco_Morangao
             int op;
             do
             {
-                do
-                {
-                    Console.Write("Informe a operação:\n1 - Sacar / 2 - Depositar / 3 - Pagar / 4 - Solicitar empréstimo / 5 - Consultas / 6 - Transferir / 7 - Serviços Cartão\n>");
-                    op = ColetarValorInt();
-                } while (op < 1 && op > 7);
+                Console.Clear();
+                Console.WriteLine("### OPÇÕES CONTA ###");
+                Console.WriteLine("Informe a operação:0 - Sair / 1 - Sacar / 2 - Depositar / 3 - Pagar / 4 - Solicitar empréstimo / 5 - Consultas / 6 - Transferir / 7 - Serviços Cartão: ");
+                op = ColetarValorInt();
                 Console.Clear();
                 switch (op)
                 {
+                    case 0:
+                        OperacaoCancelada();
+                        break;
                     case 1:
-                        Console.WriteLine("### SACAR ###");
                         Sacar(conta);
                         break;
                     case 2:
-                        Console.WriteLine("### DEPOSITAR ###");
                         Depositar(conta);
                         break;
                     case 3:
-                        Console.WriteLine("### PAGAR ###");
                         Sacar(conta);
                         break;
                     case 4:
-                        Console.WriteLine("### EMPRÉSTIMO ###");
                         SolicitarEmprestimo(conta);
                         break;
                     case 5:
-                        Console.WriteLine("### CONSULTAS ###");
                         Consultar(conta);
                         break;
                     case 6:
-                        Console.WriteLine("### TRANSFERIR ###");
                         Tranferir(conta);
                         break;
                     case 7:
-                        Console.WriteLine("### SERVIÇOS CARTÃO ###");
                         ServicosCartao(conta);
                         break;
+                    default:
+                        Console.WriteLine("### OPÇÃO INVÁLIDA ###");
+                        break;
                 }
-                Console.Clear();
-                Console.WriteLine("### MENU CONTA ###");
-            } while (RepetirOperacao());
+            } while (op != 0);
         }
 
         //Menu funcionario
-        static void MenuFuncionario()
+        static void MenuFuncionario(Funcionario funcionario)
         {
             int op;
+            Console.Clear();
             do
             {
-                Console.Write("Informe a operação: 1 - Cadastrar Cliente / 2 - Listar Clientes / 3 - Menu do gerente:  ");
-                do
-                {
-                    op = ColetarValorInt();
-                    if (op < 0 || op > 3) Console.WriteLine("INFORME VALOR VÁLIDO");
-                } while (op < 0 || op > 3);
+                Console.WriteLine("### OPÇÕES DO FUNCIONÁRIO ###");
+                Console.Write("Informe a operação: 0 - Sair / 1 - Cadastrar Cliente / 2 - Listar Clientes / 3 - Menu do gerente:  ");
+                op = ColetarValorInt();
 
                 switch (op)
                 {
@@ -179,7 +189,6 @@ namespace Banco_Morangao
                         break;
                     case 1:
                         Console.Clear();
-                        Console.WriteLine("### CADASTRAR CLIENTE ###");
                         CadastrarCliente();
                         break;
                     case 2:
@@ -189,14 +198,16 @@ namespace Banco_Morangao
                         break;
                     case 3:
                         Console.Clear();
-                        Console.WriteLine("### FUNÇÕES GERENTES ###");
-                        if (SolicitarSenha(2)) MenuGerente();
-                        else Console.WriteLine("Senha inválida\nOPERAÇÃO CANCELADA");
+                        if (funcionario.getNivelAcesso() == 2) MenuGerente();
+                        else Console.WriteLine("### VOCÊ NÃO POSSUI ACESSO AS OPÇÕES DE GERENTE ###\nOPERAÇÃO CANCELADA");
+                        Pause();
+                        break;
+                    default:
+                        Console.WriteLine("### OPÇÃO INVÁLIDA ###");
                         break;
                 }
                 Console.Clear();
-                Console.WriteLine("### MENU FUNCIONÁRIO ###");
-            } while (RepetirOperacao());
+            } while (op != 0);
         }
 
         //Menu gerente
@@ -204,33 +215,30 @@ namespace Banco_Morangao
         {
             Console.Clear();
             int op;
-            Console.Write("Informe a operação: 1 - Cadastrar Funcionário / 2 - Listar Funcionário / 3 - Aprovações\n>");
-            do
-            {
-                op = ColetarValorInt();
-            } while (op < 1 || op > 3);
-
+            Console.WriteLine("### OPÇÕES DE GERENTE ###");
+            Console.Write("Informe a operação: 0 - Sair / 1 - Cadastrar Funcionário / 2 - Listar Funcionário / 3 - Aprovações: ");
+            op = ColetarValorInt();
             switch (op)
             {
+                case 0:
+                    OperacaoCancelada();
+                    break;
                 case 1:
-                    Console.Clear();
-                    Console.WriteLine("### CADASTRAR FUNCIONÁRIO ###");
                     CadastrarFuncionario();
-                    Console.WriteLine("\n\n### FUNCIONÁRIO CADASTRADO COM SUCESSO ###");
                     Pause();
                     break;
                 case 2:
-                    Console.Clear();
                     Console.WriteLine("### LISTAR FUNCIONÁRIOS ###");
                     agencia.getListFuncionarios();
                     Console.WriteLine("\n\n### FIM ###");
                     Pause();
                     break;
                 case 3:
-                    Console.Clear();
-                    Console.WriteLine("### APROVAR SOLICITAÇÕES###");
                     Aprovacao();
                     Pause();
+                    break;
+                default:
+                    Console.WriteLine("### OPÇÃO INVÁLIDA ###");
                     break;
             }
         }
@@ -245,7 +253,9 @@ namespace Banco_Morangao
         {
             float valor;
             int op;
-            Console.WriteLine("Deseja tranferir de sua conta poupança ou para outra conta? 1 - Poupança / 2 - Outra / 0 - Cancelar");
+            Console.Clear();
+            Console.WriteLine("### TRANSFERÊNCIAS ###");
+            Console.WriteLine("Deseja tranferir para sua conta poupança ou para outra conta? 1 - Poupança / 2 - Outra / 0 - Cancelar");
             do
             {
                 op = ColetarValorInt();
@@ -254,6 +264,8 @@ namespace Banco_Morangao
             if (op == 1) TransferirContaPoupanca(conta);
             else if (op == 2)
             {
+                Console.Clear();
+                Console.WriteLine("### TRANSFERÊNCIAS ENTRE CONTAS ###");
                 ContaCorrente contaDestino = ContaDestino();
                 if (contaDestino != null)
                 {
@@ -269,7 +281,6 @@ namespace Banco_Morangao
                     Pause();
                 }
                 else Console.WriteLine("CLIENTE NÃO LOCALIZADO");
-                Pause();
             }
             else OperacaoCancelada();
         }
@@ -285,7 +296,9 @@ namespace Banco_Morangao
         static void TransferirContaPoupanca(ContaCorrente conta)
         {
             int op;
-            Console.WriteLine("Deseja resgatar dinheiro da poupança ou guardar? 1 - Resgatar / 2 - Guardar / 0 - Cancelar");
+            Console.Clear();
+            Console.WriteLine("### TRANSFERÊNCIA EM CONTA POUPANÇA ###");
+            Console.WriteLine("Deseja resgatar dinheiro da poupança ou guardar? 0 - Cancelar / 1 - Resgatar / 2 - Guardar ");
             do
             {
                 op = ColetarValorInt();
@@ -302,7 +315,7 @@ namespace Banco_Morangao
         {
             float valor;
             Console.Clear();
-            Console.Write("### GUARDAR POUPANÇA ###\nInforme o valor: ");
+            Console.Write("### DEPÓSITO EM POUPANÇA ###\nInforme o valor: ");
             valor = ColetarValorFloat();
             if (conta.MovimentarSaida("CC", "Guardar Poup", valor)) conta.MovimentarEntrada("CP", "Guardar Poup", valor);
             else Console.WriteLine("Erro na solicitação");
@@ -315,7 +328,7 @@ namespace Banco_Morangao
         {
             float valor;
             Console.Clear();
-            Console.Write("### RESGATAR POUPANÇA ###\nInforme o valor: ");
+            Console.Write("### SAQUE EM CONTA POUPANÇA ###\nInforme o valor: ");
             valor = ColetarValorFloat();
             if (conta.MovimentarSaida("CP", "Resgate Poup", valor)) conta.MovimentarEntrada("CC", "Resgate Poup", valor);
             else Console.WriteLine("Erro na solicitação");
@@ -328,6 +341,8 @@ namespace Banco_Morangao
         static void Consultar(ContaCorrente conta)
         {
             int op;
+            Console.Clear();
+            Console.WriteLine("### CONSULTAS ###");
             Console.Write("O que deseja consultar 0 - Sair / 1 - Saldo / 2 - Extrato: ");
             op = AuxColetarValor1e2();
             Console.Clear();
@@ -349,6 +364,8 @@ namespace Banco_Morangao
         static void Depositar(ContaCorrente conta)
         {
             float valor;
+            Console.Clear();
+            Console.WriteLine("### DEPÓSITOS ###");
             Console.Write("Informe o valor: ");
             valor = ColetarValorFloat();
             conta.MovimentarEntrada("CC", "Depósito", valor);
@@ -361,6 +378,8 @@ namespace Banco_Morangao
         static void Sacar(ContaCorrente conta)
         {
             float valor;
+            Console.Clear();
+            Console.WriteLine("### SAQUES ###");
             Console.Write("Informe o valor: ");
             valor = ColetarValorFloat();
             conta.MovimentarSaida("CC", "Saque/Pag", valor);
@@ -373,17 +392,15 @@ namespace Banco_Morangao
         static void SolicitarEmprestimo(ContaCorrente conta)
         {
             float valor;
-            string confirmar;
+            int confirmar;
+            Console.Clear();
+            Console.WriteLine("### SOLICITAÇÃO DE EMPRÉSTIMO ###");
             Console.WriteLine("Informe o valor que deseja emprestar:");
             valor = CalcularCustoEmprestimo(ColetarValorFloat(), conta._tipoConta);
             Console.WriteLine($"Custo do empréstimo: R$ {valor.ToString("F")}");
-            Console.WriteLine("Deseja confirmar o empréstimo? sim ou nao");
-            do
-            {
-                confirmar = ColetarString();
-                if (confirmar != "SIM" && confirmar != "NAO") Console.WriteLine("Informe opção válida");
-            } while (confirmar != "SIM" && confirmar != "NAO");
-            if (confirmar == "SIM")
+            Console.Write("Deseja confirmar o empréstimo? 1 - Sim / 2 - Não: ");
+            confirmar = AuxColetarValor1e2();
+            if (confirmar == 1)
             {
                 conta.setValorEmprestimo(valor);
                 agencia.setSolicitacaoEmprestimo(conta);
@@ -403,12 +420,10 @@ namespace Banco_Morangao
         static void BloquearDesbloquearCartao(ContaCorrente conta)
         {
             int confirmar;
+            Console.Clear();
+            Console.WriteLine("### BLOQUEAR / DESBLOQUEAR CARTÃO ###");
             Console.WriteLine("Deseja bloquear ou desbloquear seu cartão? 0 - Cancelar / 1 - Bloquear / 2 - Desbloquear");
-            do
-            {
-                confirmar = ColetarValorInt();
-                if (confirmar < 0 || confirmar > 3) Console.WriteLine("Informe uma operação correta");
-            } while (confirmar < 0 || confirmar > 3);
+            confirmar = ColetarValorInt();
 
             if (confirmar == 1)
             {
@@ -427,20 +442,21 @@ namespace Banco_Morangao
                 OperacaoCancelada();
                 return;
             }
-            Pause();
         }
 
         static void ServicosCartao(ContaCorrente conta)
         {
             int op;
+            Console.Clear();
+            Console.WriteLine("### SERVIÇOS DO CARTÃO ###");
             Console.Write("0 - Cancelar / 1 - Bloquear/Desbloquear cartão / 2 - Consultar saldo cartão / 3 - Consultar status do cartão: ");
-            do
-            {
-                op = ColetarValorInt();
-            } while (op < 0 || op > 3);
+            op = ColetarValorInt();
 
             switch (op)
             {
+                case 0:
+                    OperacaoCancelada();
+                    break;
                 case 1:
                     BloquearDesbloquearCartao(conta);
                     break;
@@ -450,9 +466,6 @@ namespace Banco_Morangao
                 case 3:
                     Console.WriteLine($"Cartão: {conta.StatusCartao()}");
                     Pause();
-                    break;
-                case 0:
-                    OperacaoCancelada();
                     break;
             }
         }
@@ -470,7 +483,7 @@ namespace Banco_Morangao
         //metodo para coletar endereco
         static Endereco ColetarEndereco()
         {
-            Console.WriteLine("INFORME O ENDEREÇO");
+            Console.WriteLine("\n### INFORME O ENDEREÇO ###");
 
             string logradouro, bairro, cidade, cep, complemento, numero;
 
@@ -497,7 +510,7 @@ namespace Banco_Morangao
         //metodo coletar dados pessoa
         static Pessoa ColetarPessoa()
         {
-            Console.WriteLine("### INFORME OS DADOS DA PESSOA ###");
+            Console.WriteLine("\n### INFORME OS DADOS DA PESSOA ###");
             string nome, telefone, email, cpf, genero;
             Endereco endereco;
 
@@ -534,6 +547,8 @@ namespace Banco_Morangao
             float renda;
             int estudante;
 
+            Console.Clear();
+            Console.WriteLine("### CADASTRO DE CLIENTES ###");
             Console.Write("Estudante (Informe 1 - Sim ou 2 - Não): ");
             do
             {
@@ -545,7 +560,6 @@ namespace Banco_Morangao
             Console.Clear();
             conta = CriarContaCorrente(renda, pessoa);
             Console.Clear();
-
             Cliente cliente = new Cliente(pessoa, Estudante(estudante), renda.ToString(), conta);
             agencia.setListaAprovacaoContas(cliente);
             Console.Clear();
@@ -564,11 +578,10 @@ namespace Banco_Morangao
         //criar conta corrente
         static ContaCorrente CriarContaCorrente(float renda, Pessoa pessoa)
         {
-            String agencia, tipoConta, senha;
+            String tipoConta, senha;
             float saldoInicial;
             Console.WriteLine("#### INFORME OS DADOS DA CONTA ###");
-            Console.Write("Informe o número da agência: ");
-            agencia = ColetarString();
+
             Console.Write("Informe o tipo de conta Normal / Universitaria / Vip: ");
             do
             {
@@ -579,7 +592,7 @@ namespace Banco_Morangao
             float.TryParse(Console.ReadLine(), out saldoInicial);
             Console.Write("Informe uma senha para sua conta: Pode incluir numeros, simbolos e digitos numéricos: ");
             senha = ColetarString();
-            return new ContaCorrente(agencia, saldoInicial, tipoConta, renda, pessoa, senha);
+            return new ContaCorrente(agencia.NumAgencia.ToString(), saldoInicial, tipoConta, renda, pessoa, senha);
         }
 
         #endregion Funcionário
@@ -594,8 +607,6 @@ namespace Banco_Morangao
             String cargo, senha;
             int nivelAcesso;
 
-
-            Console.WriteLine("### CADASTRO DE FUNCIONÁRIO ###");
             pessoa = ColetarPessoa();
             Console.Clear();
             Console.Write("Informe o cargo do funcionário: ");
@@ -614,13 +625,15 @@ namespace Banco_Morangao
             Funcionario funcionario = new Funcionario(pessoa, cargo, nivelAcesso, senha);
             agencia.setFuncList(funcionario);
             Console.Clear();
-            Console.WriteLine("### CADASTRADO COM SUCESSO ###\n\n" + funcionario);
+            Console.WriteLine(funcionario + "\n\n### CADASTRADO COM SUCESSO ###\n");
             Pause();
         }
 
         //finalizar aprovações de emprestimo
         static void Aprovacao()
         {
+            Console.Clear();
+            Console.WriteLine("### APROVAÇÕES ###");
             Console.WriteLine("1 - Aprovar Abertura de Conta / 2 - Aprovar Empréstimo");
             int op = AuxColetarValor1e2();
             if (op == 1) AprovacaoAberturaDeContas();
@@ -633,6 +646,8 @@ namespace Banco_Morangao
             int op;
             do
             {
+                Console.Clear();
+                Console.WriteLine("### APROVAÇÕES DE ABERTURA DE CONTAS ###");
                 Cliente cliente = agencia.BuscarAprovacoesContas();
                 if (cliente != null)
                 {
@@ -646,12 +661,14 @@ namespace Banco_Morangao
                         agencia.setListCliente(cliente);
                         agencia.setContaList(cliente.getConta());
                         agencia.DelListaAprovacao(cliente);
+                        Pause();
                     }
                     else
                     {
                         cliente.HabilitarCliente(false);
                         Console.WriteLine("Reprovado");
                         agencia.DelListaAprovacao(cliente);
+                        Pause();
                     }
                 }
                 else
@@ -668,6 +685,8 @@ namespace Banco_Morangao
         static void AprovacaoEmprestimo()
         {
             int op;
+            Console.Clear();
+            Console.WriteLine("### APROVAÇÕES DE EMPRÉSTIMOS###");
             ContaCorrente conta = agencia.getSolicitacaoEmprestimo();
             if (conta != null)
             {
@@ -701,17 +720,8 @@ namespace Banco_Morangao
             int op;
             Console.Write("Deseja efetuar nova operação? 1 - SIM / 2 - NÃO: ");
             op = AuxColetarValor1e2();
-            if (op == 1)
-            {
-                Console.Clear();
-                return true;
-            }
-
-            else
-            {
-                Console.Clear();
-                return false;
-            }
+            if (op == 1) return true;
+            else return false;
         }
         //metodo para coletar valores int
         static int ColetarValorInt()
@@ -794,7 +804,7 @@ namespace Banco_Morangao
             {
                 valor = ColetarValorInt();
                 if (valor < 0 && valor > 2) Console.WriteLine("Informe valor válido");
-            } while (valor < 1 && valor > 2);
+            } while (valor < 0 && valor > 2);
             return valor;
         }
 

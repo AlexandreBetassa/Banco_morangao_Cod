@@ -10,11 +10,22 @@ namespace Banco_Morangao
 {
     internal class Agencia
     {
+        public String NomeBanco { get; set; }
+        public int NumAgencia { get; set; }
+        public Endereco Endereco { get; set; }
+
         internal protected List<Cliente> _listClientes = new List<Cliente>();
         private List<Funcionario> _listFuncionario = new List<Funcionario>();
         private List<ContaCorrente> _listContaCorrente = new List<ContaCorrente>();
         private List<Cliente> _listAprovacoesCliente = new List<Cliente>();
         private List<ContaCorrente> _listAprovacoesEmprestimo = new List<ContaCorrente>();
+
+        public Agencia()
+        {
+            NomeBanco = "### BANCO MORANGÃO ###";
+            NumAgencia = 1;
+            Endereco = new Endereco("Rua das Frutas", "180", "Carreador1", "Horta Xurupita", "00000-000", "");
+        }
 
         #region metodos da agencia
         public void setListCliente(Cliente cliente)
@@ -33,25 +44,24 @@ namespace Banco_Morangao
         public void getListFuncionarios()
         {
             foreach (var item in _listFuncionario)
-                if (item != null) Console.WriteLine($"FUNCIONÁRIO: {_listFuncionario}\n{item}\n");
+                if (item != null) Console.WriteLine($"FUNCIONÁRIO\n{item}\n");
                 else Console.WriteLine("Não há funcionário a serem listados");
         }
 
         //metodo de verificacao de acesso de funcionario
-        public bool BuscarFucionario(string senha, int nivelAcesso, string id)
+        public Funcionario BuscarFucionario(string senha, string id)
         {
             foreach (var item in _listFuncionario)
             {
-                if (item != null) if (item.getSenha(senha, nivelAcesso, id)) return true;
+                if (item != null && item.getSenha(senha, id)) return item;
             }
-            return false;
+            return null;
         }
 
         //metodo para adicionar funcionario na lista
         public void setFuncList(Funcionario funcionario)
         {
             _listFuncionario.Add(funcionario);
-            Console.WriteLine("Funcionário cadastrado com sucesso!!");
         }
 
         //metodo para remover funcionario na lista
@@ -87,7 +97,6 @@ namespace Banco_Morangao
         public ContaCorrente BuscarContaCorrente(string agencia, string numConta)
         {
             foreach (ContaCorrente conta in _listContaCorrente) if (conta._agencia == agencia && conta._numConta == numConta) return conta;
-            Console.WriteLine("Usúario não encontrado");
             return null;
         }
         #endregion metodos lista contas
@@ -140,6 +149,11 @@ namespace Banco_Morangao
 
         #endregion metodos lista aprovação
 
+        //metodo para imprimir os dados da agencia
+        public override string ToString()
+        {
+            return $"\t{NomeBanco}\nNúmero da Agência: {NumAgencia}\tEndereço: {Endereco}".ToString();
+        }
         #endregion metodos da agencia
     }
 }

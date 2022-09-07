@@ -8,7 +8,11 @@ namespace Banco_Morangao
 {
     internal class ContaPoupanca : ContaCorrente
     {
-        internal protected float _saldo;
+
+        public ContaPoupanca()
+        {
+            _saldo = 0;
+        }
 
 
         public override string ToString()
