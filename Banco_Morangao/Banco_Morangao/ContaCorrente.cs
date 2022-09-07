@@ -12,7 +12,7 @@ namespace Banco_Morangao
         internal protected String _agencia;
         private String _senha;
         internal protected String _numConta;
-        private float _saldo;
+        protected float _saldo;
         private float _limite;
         private Cartao _cartao;
         internal protected String _tipoConta;
@@ -93,11 +93,8 @@ namespace Banco_Morangao
         }
 
         //metodo para retornar senha
-        public bool getSenha()
+        public bool getSenha(string senha)
         {
-            string senha;
-            Console.Write($"Por favor {_pessoa._nome} informe sua senha para continuar: ");
-            senha = Console.ReadLine();
             if (_senha == senha) return true;
             else return false;
         }

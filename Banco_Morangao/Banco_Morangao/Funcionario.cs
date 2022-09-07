@@ -16,9 +16,9 @@ namespace Banco_Morangao
 
         public Funcionario()
         {
-            _pessoa = new Pessoa();
+            _pessoa = new Pessoa("ADMIN", "", new Endereco(), "", "", "");
             _id = "0";
-            _cargo = "GERENTE";
+            _cargo = "ADMIN";
             _nivelAcesso = 2;
             _senha = "0";
         }
@@ -33,10 +33,15 @@ namespace Banco_Morangao
             _senha = senha;
         }
 
-        public bool getSenha(string senha, int nivelAcesso, string id)
+        public bool getSenha(string senha, string id)
         {
-            if (_senha == senha && _nivelAcesso >= nivelAcesso && _id == id) return true;
+            if (_senha == senha && _id == id) return true;
             else return false;
+        }
+
+        public int getNivelAcesso()
+        {
+            return _nivelAcesso;
         }
 
         public override string ToString()
