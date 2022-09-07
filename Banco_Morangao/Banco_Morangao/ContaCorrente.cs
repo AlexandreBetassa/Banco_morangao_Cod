@@ -25,7 +25,7 @@ namespace Banco_Morangao
         //metodo construtor vazio
         public ContaCorrente() { }
 
-        //Construtor
+        //Construtor //com parametros
         public ContaCorrente(string agencia, float saldo, string tipoConta, float renda, Pessoa pessoa, String senha)
         {
             _limite = CalcularLimite(renda);
@@ -152,14 +152,11 @@ namespace Banco_Morangao
         {
             _cartao.setCartao(estado);
         }
-
         #endregion Cartao
-
         //metodo toString
         public override string ToString()
         {
             return $"Agência: {_agencia}\nNúmero conta: {_numConta}\nTipo de conta: {_tipoConta}\nCARTÃO\n{_cartao}".ToString();
         }
-
     }
 }
