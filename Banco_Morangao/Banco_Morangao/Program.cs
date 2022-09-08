@@ -15,49 +15,68 @@ namespace Banco_Morangao
 
         static void Main(string[] args)
         {
-            int op;
             Inicio();
             do
             {
-                if (listaAgencias.Count == 0)
+                if (listaAgencias.Count == 0) PrimeiroAcesso();
+                else LoginAgencia();
+            } while (true);
+        }
+
+        //metodo de segundo acesso
+        static void LoginAgencia()
+        {
+            Console.Clear();
+            int op;
+            do
+            {
+                Console.Clear();
+                Console.WriteLine("### BANCO MORANGÃO ###");
+                Console.WriteLine("Deseja fazer login na agência?\n0 - Sair\n1 - Login agência ");
+                op = int.Parse(Console.ReadLine()); ;
+                switch (op)
                 {
-                    Console.Write("Você ainda não possui agências cadastradas!!!\n0 - Encerrar\n1 - Para cadastrar\nInformar opção> ");
-                    op = ColetarValorInt();
-                    switch (op)
-                    {
-                        case 0:
-                            Console.WriteLine("Sair");
-                            break;
-                        case 1:
-                            CadastrarAgencia();
-                            break;
-                        default:
-                            Console.WriteLine("Operação inválida!!!");
-                            Pause();
-                            break;
-                    }
-                }
-                else
-                {
-                    Console.Clear();
-                    Console.WriteLine("### BANCO MORANGÃO ###");
-                    Console.Write("Deseja fazer login na agência?\n0 - Encerrar\n1 - Sim\nInformar opção> ");
-                    op = ColetarValorInt();
-                    Console.Clear();
-                    if (op == 1)
-                    {
+                    case 0:
+                        Console.WriteLine("Sair");
+                        Environment.Exit(0);
+                        break;
+                    case 1:
                         Console.WriteLine("\t### AGÊNCIAS CADASTRADAS ###");
                         foreach (Agencia item in listaAgencias) Console.WriteLine($"Agência: {item.NumAgencia}\nEnd: {item.Endereco}\n");
                         Console.Write("\nInforme o número da agência que deseja logar: ");
                         string ag = ColetarString();
                         agencia = LocalizarAgencia(ag);
                         if (agencia != null) MenuSistema();
-                    }
-                    Console.WriteLine("Sair");
+                        break;
+                    default:
+                        Console.WriteLine("Operação inválida");
+                        break;
                 }
             } while (op != 0);
         }
 
+        //metodo do primeiro acesso, quando ainda nao existem agencias cadastradas
+        static void PrimeiroAcesso()
+        {
+            Console.Write("Você ainda não possui agências cadastradas!!!\n0 - Encerrar\n1 - Para cadastrar\nInformar opção> ");
+            int op = ColetarValorInt();
+            switch (op)
+            {
+                case 0:
+                    Console.WriteLine("Sair");
+                    Environment.Exit(0);
+                    break;
+                case 1:
+                    CadastrarAgencia();
+                    break;
+                default:
+                    Console.WriteLine("Operação inválida!!!");
+                    Pause();
+                    break;
+            }
+        }
+
+        //msg de inicio
         public static void Inicio()
         {
             Console.Clear();
@@ -257,7 +276,6 @@ namespace Banco_Morangao
                     break;
                 case 1:
                     CadastrarFuncionario();
-                    Pause();
                     break;
                 case 2:
                     Console.WriteLine("### LISTAR FUNCIONÁRIOS ###");
@@ -549,13 +567,14 @@ namespace Banco_Morangao
         {
             Console.WriteLine("\n### INFORME O ENDEREÇO ###");
 
-            string logradouro, bairro, cidade, cep, complemento, numero;
+            string logradouro, bairro, cidade, cep, complemento;
+            int numero;
 
             Console.Write("Informe o logradouro com rua ou avenida: ");
             logradouro = ColetarString();
 
             Console.Write("Informe o numero: ");
-            numero = ColetarString();
+            numero = ColetarValorInt();
 
             Console.Write("Informe o bairro: ");
             bairro = ColetarString();
@@ -568,7 +587,7 @@ namespace Banco_Morangao
 
             Console.Write("Informe o complemento (Caso necessário): ");
             complemento = Console.ReadLine();
-            return new Endereco(logradouro, numero, bairro, cidade, cep, complemento);
+            return new Endereco(logradouro, numero.ToString(), bairro, cidade, cep, complemento);
         }
 
         //metodo coletar dados pessoa
@@ -713,7 +732,6 @@ namespace Banco_Morangao
             agencia.setFuncList(funcionario);
             Console.Clear();
             Console.WriteLine(funcionario + "\n\n### CADASTRADO COM SUCESSO ###\n");
-            Pause();
         }
 
         //finalizar aprovações de emprestimo
