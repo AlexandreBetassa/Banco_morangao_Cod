@@ -1,45 +1,61 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Net.Http.Headers;
 using System.Net.WebSockets;
+using System.Security.Cryptography.X509Certificates;
 
 namespace Banco_Morangao
 {
     internal class Program
     {
-        static Agencia agencia = new Agencia();
+        static List<Agencia> listaAgencias = new List<Agencia>();
+        static Agencia agencia;
+        static int qtdAg = 1;
 
         static void Main(string[] args)
         {
             int op;
-            agencia.setFuncList(new Funcionario());
             Inicio();
             do
             {
-                op = MenuSistema();
-                switch (op)
+                if (listaAgencias.Count == 0)
                 {
-                    case 0:
-                        OperacaoCancelada();
-                        break;
-                    case 1:
-                        AreaCliente();
-                        Pause();
-                        break;
-                    case 2:
-                        AreaFuncionario();
-                        Pause();
-                        break;
-                    case 3:
-                        Inicio();
-                        break;
-                    default:
-                        Console.WriteLine("Opção inválida");
-                        Pause();
-                        break;
+                    Console.Write("Você ainda não possui agências cadastradas!!!\n0 - Encerrar\n1 - Para cadastrar\nInformar opção> ");
+                    op = ColetarValorInt();
+                    switch (op)
+                    {
+                        case 0:
+                            Console.WriteLine("Sair");
+                            break;
+                        case 1:
+                            CadastrarAgencia();
+                            break;
+                        default:
+                            Console.WriteLine("Operação inválida!!!");
+                            Pause();
+                            break;
+                    }
+                }
+                else
+                {
+                    Console.Clear();
+                    Console.WriteLine("### BANCO MORANGÃO ###");
+                    Console.Write("Deseja fazer login na agência?\n0 - Encerrar\n1 - Sim\nInformar opção> ");
+                    op = ColetarValorInt();
+                    Console.Clear();
+                    if (op == 1)
+                    {
+                        Console.WriteLine("\t### AGÊNCIAS CADASTRADAS ###");
+                        foreach (Agencia item in listaAgencias) Console.WriteLine($"Agência: {item.NumAgencia}\nEnd: {item.Endereco}\n");
+                        Console.Write("\nInforme o número da agência que deseja logar: ");
+                        string ag = ColetarString();
+                        agencia = LocalizarAgencia(ag);
+                        if (agencia != null) MenuSistema();
+                    }
+                    Console.WriteLine("Sair");
                 }
             } while (op != 0);
-            Console.WriteLine("Sair");
         }
 
         public static void Inicio()
@@ -56,13 +72,38 @@ namespace Banco_Morangao
         //TESTAR MENUS
         #region Menus
         //Menu
-        static int MenuSistema()
+        static bool MenuSistema()
         {
             Console.Clear();
-            Console.WriteLine("\t### MENU SISTEMA ###");
-            Console.Write("Você é cliente ou funcionário?\n0 - Sair\n1 - Cliente\n2 - Funcionário\n3 - Mensagem inicial\nInforme opção> ");
-            int op = AuxColetarValor1e2();
-            return op;
+            string ag;
+            int op;
+            do
+            {
+                Console.WriteLine($"{agencia.NomeBanco}\nAgência: {agencia.NumAgencia}\nEndereço: {agencia.Endereco}\n");
+                Console.WriteLine("### MENU SISTEMA ###");
+                Console.Write("Você é cliente ou funcionário?\n0 - Sair\n1 - Cliente\n2 - Funcionário\n4 - Mensagem inicial\nInforme opção> ");
+                op = AuxColetarValor1e2();
+                switch (op)
+                {
+                    case 0:
+                        OperacaoCancelada();
+                        break;
+                    case 1:
+                        LoginCliente();
+                        break;
+                    case 2:
+                        AreaFuncionario();
+                        break;
+                    case 3:
+                        Inicio();
+                        break;
+                    default:
+                        Console.WriteLine("Opção inválida");
+                        Pause();
+                        break;
+                }
+            } while (op != 0);
+            return false;
         }
 
         //Solicitar numero da agencia
@@ -90,7 +131,7 @@ namespace Banco_Morangao
             string senha;
             Console.Clear();
             Console.WriteLine("### LOGIN CLIENTE ####");
-            ContaCorrente conta = agencia.BuscarContaCorrente(SolicitarAgencia(), SolicitarNumConta());
+            ContaCorrente conta = LocalizarConta();
             if (conta != null)
             {
                 Console.Write($"Por favor {conta._pessoa._nome} informe sua senha para continuar: ");
@@ -98,7 +139,7 @@ namespace Banco_Morangao
                 if (conta.getSenha(senha)) MenuConta(conta);
                 else Console.WriteLine("SENHA INVÁLIDA OU CLIENTE NÃO LOCALIZADO!!!");
             }
-            else Console.WriteLine("NÃO EXISTEM CONTAS CADASTRADAS");
+            else Console.WriteLine("Cliente não localizado!!!");
             Pause();
         }
 
@@ -169,7 +210,7 @@ namespace Banco_Morangao
             {
                 Console.Clear();
                 Console.WriteLine("### OPÇÕES DO FUNCIONÁRIO ###");
-                Console.Write("Informe a operação\n0 - Sair\n1 - Cadastrar Cliente\n2 - Listar Clientes\n3 - Menu do gerente\nInforme opção>   ");
+                Console.Write("Informe a operação\n0 - Sair\n1 - Cadastrar Cliente\n2 - Listar Clientes\n3 - Opções do gerente\n4 - Listar agências\nInforme opção>   ");
                 op = ColetarValorInt();
 
                 switch (op)
@@ -192,6 +233,9 @@ namespace Banco_Morangao
                         else Console.WriteLine("### VOCÊ NÃO POSSUI ACESSO AS OPÇÕES DE GERENTE ###\nOPERAÇÃO CANCELADA");
                         Pause();
                         break;
+                    case 4:
+                        ListarAgencias();
+                        break;
                     default:
                         Console.WriteLine("### OPÇÃO INVÁLIDA ###");
                         break;
@@ -205,7 +249,7 @@ namespace Banco_Morangao
             int op;
             Console.Clear();
             Console.WriteLine("### OPÇÕES DE GERENTE ###");
-            Console.Write("Informe a operação\n0 - Sair\n1 - Cadastrar Funcionário\n2 - Listar Funcionário\n3 - Aprovações\nInforme opção> ");
+            Console.Write("Informe a operação\n0 - Sair\n1 - Cadastrar Funcionário\n2 - Listar Funcionário\n3 - Aprovações\n4 - Cadastrar agência\nInforme opção> ");
             op = ColetarValorInt();
             switch (op)
             {
@@ -226,6 +270,9 @@ namespace Banco_Morangao
                     Aprovacao();
                     Pause();
                     break;
+                case 4:
+                    CadastrarAgencia();
+                    break;
                 default:
                     Console.WriteLine("### OPÇÃO INVÁLIDA ###");
                     break;
@@ -235,15 +282,6 @@ namespace Banco_Morangao
 
         //TESTAR CLIENTES
         #region Cliente
-
-        //area do cliente
-        static void AreaCliente()
-        {
-            Console.Clear();
-            Console.WriteLine("#### AREA CLIENTE ###");
-            if (agencia._listClientes.Capacity != 0) LoginCliente();
-            else Console.WriteLine("Ainda não há clientes cadastrados");
-        }
 
         #region Transferir
         //TRANSFERIR
@@ -281,7 +319,8 @@ namespace Banco_Morangao
 
             Console.Clear();
             Console.WriteLine("### TRANSFERÊNCIAS ENTRE CONTAS ###");
-            ContaCorrente contaDestino = ContaDestino();
+            Console.WriteLine("INFORME OS DADOS DA CONTA CORRENTE DESTINO");
+            ContaCorrente contaDestino = LocalizarConta();
             if (contaDestino != null)
             {
                 Console.Write("Informe o valor a ser transferido: ");
@@ -294,18 +333,17 @@ namespace Banco_Morangao
                 Console.WriteLine($"Saldo conta destino");
                 contaDestino.getSaldoToString();
             }
-            else
-            {
-                Console.WriteLine("### CONTA NÃO LOCALIZADA ###");
-                Pause();
-            }
+            else Console.WriteLine("### CONTA NÃO LOCALIZADA ###");
+            Pause();
         }
 
         //metodo para buscar conta corrente destino
-        static ContaCorrente ContaDestino()
+        static ContaCorrente LocalizarConta()
         {
-            Console.WriteLine("INFORME OS DADOS DA CONTA CORRENTE DESTINO");
-            return agencia.BuscarContaCorrente(SolicitarAgencia(), SolicitarNumConta());
+            string ag = SolicitarAgencia();
+            string numConta = SolicitarNumConta();
+            Agencia agenciaDestino = LocalizarAgencia(ag);
+            return agenciaDestino.BuscarContaCorrente(numConta);
         }
 
         //metodo para tranferencia em conta poupança
@@ -503,7 +541,8 @@ namespace Banco_Morangao
             Console.WriteLine("\t### MENU FUNCIONÁRIO ###");
             Funcionario funcionario = LoginFuncionario();
             if (funcionario != null) MenuFuncionario(funcionario);
-            else Console.WriteLine("Senha Inválida");
+            else Console.WriteLine("Senha inválida ou usuário não cadastrado");
+            Pause();
         }
 
         //metodo para coletar endereco
@@ -606,8 +645,8 @@ namespace Banco_Morangao
         {
             String tipoConta, senha;
             float saldoInicial;
+            Console.Clear();
             Console.WriteLine("#### INFORME OS DADOS DA CONTA ###");
-
             Console.Write("Informe o tipo de conta:\nNormal\nUniversitaria\nVip\nInforme opção> ");
             do
             {
@@ -625,6 +664,29 @@ namespace Banco_Morangao
 
         //REVISAR
         #region Gerente
+        //cadastramento de agencias
+        static void CadastrarAgencia()
+        {
+            Endereco endereco;
+            string nome;
+            Console.Clear();
+            Console.WriteLine("### CADASTRAMENTO DE AGÊNCIA ###");
+            Console.Write("Informe o nome da agência (opcional): ");
+            nome = Console.ReadLine();
+            endereco = ColetarEndereco();
+            Agencia agencia = new Agencia(qtdAg, endereco, nome);
+            agencia.setFuncList(new Funcionario());
+            qtdAg += 1;
+            listaAgencias.Add(agencia);
+        }
+
+        static void ListarAgencias()
+        {
+            Console.Clear();
+            Console.WriteLine("### LISTAR AGÊNCIAS ###");
+            foreach (Agencia ag in listaAgencias) Console.WriteLine(ag + "\n");
+            Pause();
+        }
 
         //metodo cadastrar funcionario
         static void CadastrarFuncionario()
@@ -835,5 +897,18 @@ namespace Banco_Morangao
         }
 
         #endregion Tratamento de Erros
+
+        //metodo para localizar agencia
+        static Agencia LocalizarAgencia(string ag)
+        {
+            foreach (var agencia in listaAgencias) if (agencia.NumAgencia == ag) return agencia;
+            if (agencia != null)
+            {
+                return agencia;
+            }
+            Console.WriteLine("Agência não localizada!!!");
+            Pause();
+            return null;
+        }
     }
 }
