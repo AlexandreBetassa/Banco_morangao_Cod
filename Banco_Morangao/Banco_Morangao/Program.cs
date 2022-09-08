@@ -75,13 +75,12 @@ namespace Banco_Morangao
         static bool MenuSistema()
         {
             Console.Clear();
-            string ag;
             int op;
             do
             {
                 Console.WriteLine($"{agencia.NomeBanco}\nAgência: {agencia.NumAgencia}\nEndereço: {agencia.Endereco}\n");
                 Console.WriteLine("### MENU SISTEMA ###");
-                Console.Write("Você é cliente ou funcionário?\n0 - Sair\n1 - Cliente\n2 - Funcionário\n4 - Mensagem inicial\nInforme opção> ");
+                Console.Write("Você é cliente ou funcionário?\n0 - Sair\n1 - Cliente\n2 - Funcionário\n3 - Mensagem inicial\nInforme opção> ");
                 op = AuxColetarValor1e2();
                 switch (op)
                 {
