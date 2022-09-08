@@ -37,11 +37,13 @@ namespace Banco_Morangao
             _habilitarCartao = estado;
         }
 
+        //metodo para retornar o numero do cartao
         public string getNumeroCartao()
         {
             return _numCartao;
         }
 
+        //metodo para saber se o cartao ta bloqueado ou desbloqueado
         public void StatusCartao()
         {
 
