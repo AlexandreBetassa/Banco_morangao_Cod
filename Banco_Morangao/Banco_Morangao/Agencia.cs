@@ -22,7 +22,7 @@ namespace Banco_Morangao
 
         public Agencia(int NumAg, Endereco endereco, string nomeAg)
         {
-            NomeBanco = $"### BANCO MORANGÃO - Agência: {nomeAg} ###";
+            NomeBanco = $"### BANCO MORANGÃO - Nome agência: {nomeAg} ###";
             NumAgencia = NumAg.ToString();
             Endereco = endereco;
         }
