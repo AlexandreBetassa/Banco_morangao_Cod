@@ -11,7 +11,7 @@ namespace Banco_Morangao
     internal class Agencia
     {
         public String NomeBanco { get; set; }
-        public int NumAgencia { get; set; }
+        public String NumAgencia { get; set; }
         public Endereco Endereco { get; set; }
 
         internal protected List<Cliente> _listClientes = new List<Cliente>();
@@ -20,11 +20,11 @@ namespace Banco_Morangao
         private List<Cliente> _listAprovacoesCliente = new List<Cliente>();
         private List<ContaCorrente> _listAprovacoesEmprestimo = new List<ContaCorrente>();
 
-        public Agencia()
+        public Agencia(int NumAg, Endereco endereco, string nomeAg)
         {
-            NomeBanco = "### BANCO MORANGÃO ###";
-            NumAgencia = 1;
-            Endereco = new Endereco("Rua das Frutas", "180", "Carreador1", "Horta Xurupita", "00000-000", "");
+            NomeBanco = $"### BANCO MORANGÃO - Agência: {nomeAg} ###";
+            NumAgencia = NumAg.ToString();
+            Endereco = endereco;
         }
 
         #region metodos da agencia
@@ -94,9 +94,9 @@ namespace Banco_Morangao
         }
 
         //buscar conta de usuário
-        public ContaCorrente BuscarContaCorrente(string agencia, string numConta)
+        public ContaCorrente BuscarContaCorrente(string numConta)
         {
-            foreach (ContaCorrente conta in _listContaCorrente) if (conta._agencia == agencia && conta._numConta == numConta) return conta;
+            foreach (ContaCorrente conta in _listContaCorrente) if (conta._numConta == numConta) return conta;
             return null;
         }
         #endregion metodos lista contas
@@ -152,7 +152,7 @@ namespace Banco_Morangao
         //metodo para imprimir os dados da agencia
         public override string ToString()
         {
-            return $"\t{NomeBanco}\nNúmero da Agência: {NumAgencia}\tEndereço: {Endereco}".ToString();
+            return $"{NomeBanco}\nNúmero da Agência: {NumAgencia}".ToString();
         }
         #endregion metodos da agencia
     }
