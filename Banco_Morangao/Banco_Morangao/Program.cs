@@ -97,7 +97,7 @@ namespace Banco_Morangao
             int op;
             do
             {
-                Console.WriteLine($"{agencia.NomeBanco}\nAgência: {agencia.NumAgencia}\nEndereço: {agencia.Endereco}\n");
+                Console.WriteLine($"{agencia.NomeBanco}\nNumero agência: {agencia.NumAgencia}\nEndereço: {agencia.Endereco}\n");
                 Console.WriteLine("### MENU SISTEMA ###");
                 Console.Write("Você é cliente ou funcionário?\n0 - Sair\n1 - Cliente\n2 - Funcionário\n3 - Mensagem inicial\nInforme opção> ");
                 op = AuxColetarValor1e2();
@@ -153,12 +153,11 @@ namespace Banco_Morangao
             if (conta != null)
             {
                 Console.Write($"Por favor {conta._pessoa._nome} informe sua senha para continuar: ");
-                senha = Console.ReadLine();
+                senha = ColetarString();
                 if (conta.getSenha(senha)) MenuConta(conta);
                 else Console.WriteLine("SENHA INVÁLIDA OU CLIENTE NÃO LOCALIZADO!!!");
             }
             else Console.WriteLine("Cliente não localizado!!!");
-            Pause();
         }
 
         //solicitar senha
